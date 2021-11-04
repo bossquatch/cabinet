@@ -5,6 +5,11 @@ use Illuminate\Foundation\Application;
 use Pear\Crypt\GPG;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DriverController;
+use App\Http\Controllers\DriverFieldController;
+use App\Http\Controllers\DiskController;
+use App\Http\Controllers\DiskDriverFieldController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,18 +23,96 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
+    return redirect()->route('dashboard');
+    /*
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
+    */
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('dashboard');
 
+/**
+ * Driver routes
+ */
+
+Route::get('/driver', [DriverController::class, 'index'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('driver.index');
+
+Route::get('/driver/create', [DriverController::class, 'create'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('driver.create');
+
+Route::post('/driver', [DriverController::class, 'store'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('driver.store');
+
+Route::get('/driver/{driver}', [DriverController::class, 'show'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('driver.show');
+
+Route::put('/driver/{driver}', [DriverController::class, 'update'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('driver.update');
+
+Route::post('/driver/{driver}/fields', [DriverFieldController::class, 'store'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('driver-fields.store');
+
+Route::put('/driver/{driver}/fields/{field}', [DriverFieldController::class, 'update'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('driver-fields.update');
+
+Route::delete('/driver/{driver}/fields/{field}', [DriverFieldController::class, 'destroy'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('driver-fields.destroy');
+
+/**
+ * Disk Routes
+ */
+
+Route::get('/disk', [DiskController::class, 'index'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('disk.index');
+
+Route::get('/disk/create', [DiskController::class, 'create'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('disk.create');
+
+Route::post('/disk', [DiskController::class, 'store'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('disk.store');
+
+Route::get('/disk/{disk}', [DiskController::class, 'show'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('disk.show');
+
+Route::put('/disk/{disk}', [DiskController::class, 'update'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('disk.update');
+
+Route::post('/disk/{disk}/fields', [DiskDriverFieldController::class, 'store'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('disk-fields.store');
+
+Route::get('/disk/{disk}/files', [DashboardController::class, 'files'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('disk.files');
+
+/**
+ * File Routes
+ */
+
+
+
+/*
 Route::get('/test', function () {
     phpinfo();
 });
@@ -63,3 +146,4 @@ Route::get('/test/decrypt', function () {
 
     return true;
 });
+*/
