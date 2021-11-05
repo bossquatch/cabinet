@@ -20,14 +20,6 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function files(Disk $disk)
-    {
-        return Inertia::render('Disks/Files', [
-            'disk_name' => $disk->name,
-            'files' => $disk->files,
-        ]);
-    }
-
     private function allowedDisks()
     {
         $user = auth()->user();

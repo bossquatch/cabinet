@@ -10,6 +10,7 @@ use App\Http\Controllers\DriverController;
 use App\Http\Controllers\DriverFieldController;
 use App\Http\Controllers\DiskController;
 use App\Http\Controllers\DiskDriverFieldController;
+use App\Http\Controllers\UploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,14 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('dashboard');
+
+/**
+ * Upload routes
+ */
+
+Route::get('/upload', [UploadController::class, 'index'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('upload.form');
 
 /**
  * Driver routes
@@ -102,9 +111,13 @@ Route::post('/disk/{disk}/fields', [DiskDriverFieldController::class, 'store'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('disk-fields.store');
 
-Route::get('/disk/{disk}/files', [DashboardController::class, 'files'])
+Route::get('/disk/{disk}/files', [DiskController::class, 'files'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('disk.files');
+
+Route::get('/disk/{disk}/files/download', [DiskController::class, 'download'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('disk.file-download');
 
 /**
  * File Routes

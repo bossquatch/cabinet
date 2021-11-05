@@ -148,7 +148,10 @@ class DiskController extends Controller
      */
     public function files(Disk $disk)
     {
-        //
+        return Inertia::render('Disks/Files', [
+            'disk' => $disk,
+            'files' => $disk->files,
+        ]);
     }
 
     /**
@@ -168,9 +171,11 @@ class DiskController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    public function download(Request $request)
+    public function download(Request $request, Disk $disk)
     {
-        //
+        $file = $request->input('file');
+
+        return $disk->download($file);
     }
 
     private function allowedDisks()

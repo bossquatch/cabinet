@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Response;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Response::macro('attachment', function ($content, $name, $type = 'application/pdf') {
+            $headers = [
+                'Content-type'        => $type,
+                'Content-Disposition' => "attachment; filename=\"{$name}\"",
+            ];
+        
+            return Response::make($content, 200, $headers);        
+        });
     }
 }

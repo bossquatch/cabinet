@@ -1,10 +1,10 @@
 <template>
-    <app-layout :title="disk_name">
+    <app-layout :title="disk.name">
         <template #header>
             <div class="md:flex md:items-center md:justify-between">
                 <div class="flex-1 min-w-0">
                     <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                        {{ disk_name }}
+                        {{ disk.name }}
                     </h2>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                                                     {{ file }}
                                                 </td>
                                                 <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                                    <custom-nav-link href="#" class="text-indigo-600 hover:text-indigo-900">Download</custom-nav-link>
+                                                    <a :href="route('disk.file-download', {'disk' : disk.id, 'file' : file })" class="text-indigo-600 hover:text-indigo-900">Download</a>
                                                 </td>
                                             </tr>
                                         </template>
@@ -60,17 +60,15 @@
     import { defineComponent } from 'vue'
     import AppLayout from '@/Layouts/AppLayout.vue'
     import JetSectionBorder from '@/Jetstream/SectionBorder'
-    import CustomNavLink from '@/BuildingBlocks/NavLink'
 
     export default defineComponent({
         props: [
-            'disk_name',
+            'disk',
             'files'
         ],
 
         components: {
             AppLayout,
-            CustomNavLink,
             JetSectionBorder,
         },
     })
