@@ -47,6 +47,10 @@ Route::get('/upload', [UploadController::class, 'index'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('upload.form');
 
+Route::post('/upload', [UploadController::class, 'upload'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('upload.file');
+
 /**
  * Driver routes
  */

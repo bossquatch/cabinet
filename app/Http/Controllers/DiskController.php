@@ -155,17 +155,6 @@ class DiskController extends Controller
     }
 
     /**
-     * Upload a file onto a disk
-     * 
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function upload(Request $request)
-    {
-        //
-    }
-
-    /**
      * Download a file off of a disk
      * 
      * @param  \Illuminate\Http\Request $request

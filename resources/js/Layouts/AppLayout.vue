@@ -23,6 +23,10 @@
                                     Dashboard
                                 </jet-nav-link>
 
+                                <jet-nav-link :href="route('upload.form')" :active="route().current('upload.form')">
+                                    Upload
+                                </jet-nav-link>
+
                                 <jet-nav-link v-if="$page.props.user.is_admin" :href="route('disk.index')" :active="route().current('disk.index')">
                                     Edit Disks
                                 </jet-nav-link>

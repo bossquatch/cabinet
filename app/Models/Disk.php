@@ -31,9 +31,23 @@ class Disk extends Model
         return $this->hasMany(DiskDriverField::class);
     }
 
-    public function upload()
+    public function upload(String $fileContents, String $filename)
     {
-        
+        if (config('crypt.encrypt_uploads')) {
+            // encrypt file contents
+            $fileContents = $this->encode($fileContents);
+
+            // change file name
+            $filename = $filename . '.' . config('crypt.encode_ext');
+        }
+
+        if ($this->homeFolder != '/') {
+            $filename = $this->homeFolder . '/' . $filename;
+        }
+
+        // upload
+        $this->build?->put($filename, $fileContents);
+        return true;
     }
 
     public function download(String $file)
