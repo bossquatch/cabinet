@@ -30,4 +30,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'oracle-idcs' => [    
+        'base_url' => env('ORACLEIDCS_BASE_URL'),
+        'client_id' => env('ORACLEIDCS_CLIENT_ID'),  
+        'client_secret' => env('ORACLEIDCS_CLIENT_SECRET'),  
+        'redirect' => env('ORACLEIDCS_REDIRECT'),
+        'enterprise_key' => env('ORACLEIDCS_ENTERPRISE_KEY'),
+        'group_name' => env('ORACLEIDCS_GROUP_NAME'),
+    ],      
+
 ];

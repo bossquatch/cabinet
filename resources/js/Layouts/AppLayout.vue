@@ -45,7 +45,7 @@
                                 <jet-dropdown align="right" width="60" v-if="$page.props.jetstream.hasTeamFeatures">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
-                                            <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition bg-transparent border-b-2 border-transparent hover:text-gray-700 focus:outline-none hover:border-indigo-300 focus:border-indigo-300 active:border-indigo-700">
+                                            <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-800 transition bg-transparent border-b-2 border-transparent hover:text-gray-900 focus:outline-none hover:border-indigo-300 focus:border-indigo-300 active:border-indigo-700">
                                                 {{ $page.props.user.current_team.name }}
 
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -104,7 +104,7 @@
                                         </button>
 
                                         <span v-else class="inline-flex rounded-md">
-                                            <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition bg-transparent border-b-2 border-transparent hover:text-gray-700 hover:border-indigo-300 focus:border-indigo-300 focus:outline-none active:border-indigo-700">
+                                            <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-800 transition bg-transparent border-b-2 border-transparent hover:text-gray-900 hover:border-indigo-300 focus:border-indigo-300 focus:outline-none active:border-indigo-700">
                                                 {{ $page.props.user.name }}
 
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">

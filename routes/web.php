@@ -11,6 +11,7 @@ use App\Http\Controllers\DriverFieldController;
 use App\Http\Controllers\DiskController;
 use App\Http\Controllers\DiskDriverFieldController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\Auth\OracleIDCSSocialiteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,10 @@ Route::get('/', function () {
     ]);
     */
 });
+
+// Oracle IDCS Auth
+Route::get('/oracle-idcs/login', [OracleIDCSSocialiteController::class, 'redirectToOracleIDCS'])->name('oracle-idcs.login');
+Route::get('/oracle-idcs/callback', [OracleIDCSSocialiteController::class, 'handleCallback']);
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth:sanctum', 'verified'])
