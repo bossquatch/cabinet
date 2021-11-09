@@ -14,7 +14,8 @@
                             <!-- Logo -->
                             <div class="flex items-center flex-shrink-0">
                                 <Link :href="route('dashboard')">
-                                    <jet-application-mark class="block w-auto h-9" />
+                                    <hero-folder class="block w-auto text-indigo-900 h-9" />
+                                    <!--<jet-application-mark class="block w-auto h-9" />-->
                                 </Link>
                             </div>
 
@@ -252,7 +253,8 @@
     import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
     import JetNavLink from '@/Jetstream/NavLink.vue'
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue'
-    import { Head, Link } from '@inertiajs/inertia-vue3';
+    import { Head, Link } from '@inertiajs/inertia-vue3'
+    import HeroFolder from '@/HeroIcons/Folder.vue'
 
     export default defineComponent({
         props: {
@@ -268,6 +270,7 @@
             JetNavLink,
             JetResponsiveNavLink,
             Link,
+            HeroFolder,
         },
 
         data() {
