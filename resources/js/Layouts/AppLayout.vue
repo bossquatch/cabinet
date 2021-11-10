@@ -124,7 +124,7 @@
                                             Profile
                                         </jet-dropdown-link>
 
-                                        <jet-dropdown-link :href="route('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures">
+                                        <jet-dropdown-link :href="route('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures && $page.props.user.is_admin">
                                             API Tokens
                                         </jet-dropdown-link>
 
@@ -179,7 +179,7 @@
                                 Profile
                             </jet-responsive-nav-link>
 
-                            <jet-responsive-nav-link :href="route('api-tokens.index')" :active="route().current('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures">
+                            <jet-responsive-nav-link :href="route('api-tokens.index')" :active="route().current('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures && $page.props.user.is_admin">
                                 API Tokens
                             </jet-responsive-nav-link>
 
