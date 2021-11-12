@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Arr;
 use League\Flysystem\Util\MimeType;
+use Pear\Crypt\GPG;
 
 class Disk extends Model
 {
@@ -160,18 +161,18 @@ class Disk extends Model
 
     private function decode($contents)
     {
-        $gpg = new gnupg();
+        $gpg = new \gnupg();
 
         $priKey = file_get_contents(config('crypt.decrypt_key'));
     
         $info = $gpg->import($priKey);
         $encKey = $gpg->adddecryptkey($info['fingerprint'],config('crypt.passphrase'));
-        return $gpg->decrypt($filePgp);
+        return $gpg->decrypt($contents);
     }
 
     private function encode($contents)
     {
-        $gpg = new gnupg();
+        $gpg = new \gnupg();
 
         $pubKey = file_get_contents(config('crypt.encrypt_key'));
     
