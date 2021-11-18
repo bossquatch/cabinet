@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Socialite;
 use App\Models\User;
+use App\Models\Team;
 use Illuminate\Support\Facades\Hash;
 
 class OracleIDCSSocialiteController extends Controller
@@ -58,6 +59,12 @@ class OracleIDCSSocialiteController extends Controller
                     'social_type'=> 'oracle-idcs',
                     'password' => Hash::make(($user['family_name'] ?? '') . ($user['given_name'] ?? '') . ($user['employee_number'] ?? '')),
                 ]);
+
+                $newUser->ownedTeams()->save(Team::forceCreate([
+                    'user_id' => $newUser->id,
+                    'name' => explode(' ', $newUser->name, 2)[0]."'s Team",
+                    'personal_team' => true,
+                ]));
 
                 Auth::login($newUser);
 
