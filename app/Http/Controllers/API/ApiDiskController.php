@@ -76,6 +76,34 @@ class ApiDiskController extends Controller
     }
 
     /**
+     * Upload a file
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function upload(Request $request, $id)
+    {
+        $disk = Disk::findOrFail($id);
+
+        $file = $request->file('file');
+
+        if (!$file) {
+            abort(400, 'File parameter is required.');
+        }
+
+        try {
+            if ($disk->upload($request->file('file')->get(), $request->file('file')->getClientOriginalName())) {
+                return [
+                    'status' => 'uploaded'
+                ];
+            } else {
+                abort(500, 'File upload ran into an issue.  Please contact a system administrator.');    
+            }
+        } catch (\Exception $e) {
+            abort(500, 'File upload ran into an issue.  Please contact a system administrator.');
+        }
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
