@@ -1530,6 +1530,9 @@ video {
 }.hover\:text-indigo-900:hover {
 	--tw-text-opacity: 1;
 	color: rgba(49, 46, 129, var(--tw-text-opacity));
+}.hover\:text-red-900:hover {
+	--tw-text-opacity: 1;
+	color: rgba(127, 29, 29, var(--tw-text-opacity));
 }.focus\:z-10:focus {
 	z-index: 10;
 }.focus\:border-blue-300:focus {

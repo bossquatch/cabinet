@@ -35,6 +35,7 @@
                                                 </td>
                                                 <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
                                                     <a :href="route('disk.file-download', {'disk' : disk.id, 'file' : file })" class="text-indigo-600 hover:text-indigo-900">Download</a>
+                                                    <a v-if="$page.props.user.is_admin" :href="route('disk.file-delete', {'disk' : disk.id, 'file' : file })" class="ml-2 text-red-600 hover:text-red-900">Delete</a>
                                                 </td>
                                             </tr>
                                         </template>

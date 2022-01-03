@@ -128,6 +128,10 @@ Route::get('/disk/{disk}/files/download', [DiskController::class, 'download'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('disk.file-download');
 
+Route::get('/disk/{disk}/files/delete', [DiskController::class, 'deleteFile'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('disk.file-delete');
+
 /**
  * File Routes
  */

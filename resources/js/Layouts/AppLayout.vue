@@ -2,6 +2,7 @@
     <div>
         <Head :title="title" />
 
+        <banner />
         <jet-banner />
 
         <div class="min-h-screen bg-gray-100">
@@ -255,6 +256,7 @@
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue'
     import { Head, Link } from '@inertiajs/inertia-vue3'
     import HeroFolder from '@/HeroIcons/Folder.vue'
+    import Banner from '@/BuildingBlocks/Banner.vue'
 
     export default defineComponent({
         props: {
@@ -271,6 +273,7 @@
             JetResponsiveNavLink,
             Link,
             HeroFolder,
+            Banner,
         },
 
         data() {

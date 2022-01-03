@@ -167,6 +167,24 @@ class DiskController extends Controller
         return $disk->download($file);
     }
 
+    /**
+     * Delete a file off of a disk
+     * 
+     * @param  \Illuminate\Http\Request $request
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function deleteFile(Request $request, Disk $disk)
+    {
+        $file = $request->input('file');
+
+        try {
+            $disk->deleteFile($file);
+            return back(303)->with('success_message', 'File successfully deleted');
+        } catch (\Exception $e) {
+            abort(500, 'File deletion ran into an issue.  Please contact a system administrator.');
+        }
+    }
+
     private function allowedDisks()
     {
         $user = auth()->user();

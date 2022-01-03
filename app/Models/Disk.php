@@ -68,6 +68,17 @@ class Disk extends Model
         return response()->attachment($contents, $decodedFilename, MimeType::detectByFileExtension($decodedFilename));
     }
 
+    public function deleteFile(String $file)
+    {
+        if ($this->build?->exists($file)) {
+            $this->build?->delete($file);
+        } else {
+            abort(500, 'Unable to pull file from disk.');
+        }
+
+        return true;
+    }
+
     public function getBuildAttribute()
     {
         if (!$this->activeDisk) {
