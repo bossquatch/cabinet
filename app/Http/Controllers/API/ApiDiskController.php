@@ -121,9 +121,24 @@ class ApiDiskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $disk = Disk::findOrFail($id);
+
+        $file = $request->input('file');
+
+        if (!$file) {
+            abort(400, 'File parameter is required.');
+        }
+
+        try {
+            $disk->deleteFile($file);
+            return [
+                'status' => 'deleted'
+            ];
+        } catch (\Exception $e) {
+            abort(500, 'File deletion ran into an issue.  Please contact a system administrator.');
+        }
     }
 
     private function allowedDisks(Request $request)
