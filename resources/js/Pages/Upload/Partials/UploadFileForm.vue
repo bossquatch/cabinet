@@ -21,7 +21,7 @@
                     <option value="">(Select a disk)</option>
                     <option v-for="disk in disks" :key="disk.id" :selected="disk.id == form.disk_id" :value="disk.id">{{ disk.name }}</option>
                 </custom-select>
-                <jet-input-error :message="form.errors.disk" />
+                <jet-input-error :message="form.errors.disk_id" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">

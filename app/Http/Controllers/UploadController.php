@@ -31,6 +31,8 @@ class UploadController extends Controller
         Validator::make($input, [
             'file' => ['required', 'file'],
             'disk_id' => ['required', 'integer'],
+        ],[
+            'disk_id.required' => 'Disk is required'
         ])->validateWithBag('uploadFile');
 
         $disk = Disk::findOrFail($input['disk_id']);
