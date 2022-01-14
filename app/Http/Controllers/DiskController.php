@@ -149,9 +149,19 @@ class DiskController extends Controller
      */
     public function files(Disk $disk)
     {
+        $files_temp = $disk->files;
+        $files = [];
+
+        foreach ($files_temp as $filename) {
+            $files[] = [
+                'name' => $filename,
+                'last_modified' => $disk->lastModifiedDate($filename),
+            ];
+        }
+
         return Inertia::render('Disks/Files', [
             'disk' => $disk,
-            'files' => $disk->files,
+            'files' => $files,
         ]);
     }
 

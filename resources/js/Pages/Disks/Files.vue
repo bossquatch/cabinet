@@ -22,6 +22,9 @@
                                             <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                                 Filename
                                             </th>
+                                            <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                Last Modified
+                                            </th>
                                             <th scope="col" class="relative px-6 py-3">
                                                 <span class="sr-only">Edit</span>
                                             </th>
@@ -31,11 +34,14 @@
                                         <template v-if="files.length">
                                             <tr v-for="(file, index) in files" :key="file" :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
                                                 <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
-                                                    {{ file }}
+                                                    {{ file.name }}
+                                                </td>
+                                                <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                                    {{ file.last_modified }}
                                                 </td>
                                                 <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                                    <a :href="route('disk.file-download', {'disk' : disk.id, 'file' : file })" class="text-indigo-600 hover:text-indigo-900">Download</a>
-                                                    <a v-if="$page.props.user.is_admin" :href="route('disk.file-delete', {'disk' : disk.id, 'file' : file })" class="ml-2 text-red-600 hover:text-red-900">Delete</a>
+                                                    <a :href="route('disk.file-download', {'disk' : disk.id, 'file' : file.name })" class="text-indigo-600 hover:text-indigo-900">Download</a>
+                                                    <a v-if="$page.props.user.is_admin" :href="route('disk.file-delete', {'disk' : disk.id, 'file' : file.name })" class="ml-2 text-red-600 hover:text-red-900">Delete</a>
                                                 </td>
                                             </tr>
                                         </template>

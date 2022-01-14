@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Arr;
 use League\Flysystem\Util\MimeType;
 use Pear\Crypt\GPG;
+use Carbon\Carbon;
 
 class Disk extends Model
 {
@@ -77,6 +78,11 @@ class Disk extends Model
         }
 
         return true;
+    }
+
+    public function lastModifiedDate(String $file)
+    {
+        return Carbon::parse($this->build?->lastModified($file))?->format('H:i m-d-Y');
     }
 
     public function getBuildAttribute()
