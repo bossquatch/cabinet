@@ -34,7 +34,7 @@ class Disk extends Model
 
     public function upload(String $fileContents, String $filename)
     {
-        if (config('crypt.encrypt_uploads')) {
+        if (config('crypt.encrypt_uploads') && $this->encode_files) {
             // encrypt file contents
             $fileContents = $this->encode($fileContents);
 

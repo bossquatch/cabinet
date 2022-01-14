@@ -65,6 +65,7 @@ class DiskController extends Controller
             'driver_id' => ['required', 'integer'],
             'team_id' => ['required', Rule::in($team_ids)],
             'private' => ['required', 'boolean'],
+            'encode_files' => ['required', 'boolean'],
         ])->validateWithBag('createDisk');
 
         $disk = Disk::create($input);

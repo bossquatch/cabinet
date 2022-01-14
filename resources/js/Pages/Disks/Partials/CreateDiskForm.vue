@@ -26,6 +26,7 @@
 
             <div class="col-span-6 sm:col-span-4">
                 <custom-checkbox :name="'Private*'" v-model="form.private" />
+                <custom-checkbox :name="'Encode Files'" v-model="form.encode_files" />
             </div>
 
             <div class="col-span-6 lg:col-span-4">
@@ -73,6 +74,7 @@
                     driver_id: null,
                     private: 0,
                     team_id: this.$page.props.user.current_team_id,
+                    encode_files: 1,
                 })
             }
         },

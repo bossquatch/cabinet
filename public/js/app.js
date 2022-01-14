@@ -20879,7 +20879,8 @@ __webpack_require__.r(__webpack_exports__);
         name: '',
         driver_id: null,
         "private": 0,
-        team_id: this.$page.props.user.current_team_id
+        team_id: this.$page.props.user.current_team_id,
+        encode_files: 1
       })
     };
   },
@@ -21054,7 +21055,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       form: this.$inertia.form({
         name: this.disk.name,
-        "private": this.disk["private"]
+        "private": this.disk["private"],
+        encode_files: this.disk.encode_files
       })
     };
   },
@@ -26630,6 +26632,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         })
       }, null, 8
       /* PROPS */
+      , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_checkbox, {
+        name: 'Encode Files',
+        modelValue: _ctx.form.encode_files,
+        "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+          return _ctx.form.encode_files = $event;
+        })
+      }, null, 8
+      /* PROPS */
       , ["modelValue"])]), _hoisted_8];
     }),
     actions: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -26928,6 +26938,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         modelValue: _ctx.form["private"],
         "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
           return _ctx.form["private"] = $event;
+        })
+      }, null, 8
+      /* PROPS */
+      , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_checkbox, {
+        name: 'Encode Files',
+        modelValue: _ctx.form.encode_files,
+        "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+          return _ctx.form.encode_files = $event;
         })
       }, null, 8
       /* PROPS */

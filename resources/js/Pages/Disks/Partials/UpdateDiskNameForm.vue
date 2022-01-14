@@ -31,6 +31,7 @@
 
             <div class="col-span-6 sm:col-span-4">
                 <custom-checkbox :name="'Private*'" v-model="form.private" />
+                <custom-checkbox :name="'Encode Files'" v-model="form.encode_files" />
             </div>
 
             <div class="col-span-6 lg:col-span-4">
@@ -82,6 +83,7 @@
                 form: this.$inertia.form({
                     name: this.disk.name,
                     private: this.disk.private,
+                    encode_files: this.disk.encode_files,
                 })
             }
         },
