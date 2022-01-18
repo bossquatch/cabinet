@@ -19,6 +19,31 @@ return [
 
     'default' => env('LOG_CHANNEL', 'stack'),
 
+    'disk' => [
+        'fields' => [
+            'name',
+            'color_class',
+        ],
+        'types' => [
+            [
+                'name' => 'upload',
+                'color_class' => 'blue',
+            ],
+            [
+                'name' => 'download',
+                'color_class' => 'green',
+            ],
+            [
+                'name' => 'backup',
+                'color_class' => 'purple',
+            ],
+            [
+                'name' => 'delete',
+                'color_class' => 'red',
+            ],
+        ],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Log Channels

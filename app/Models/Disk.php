@@ -33,6 +33,11 @@ class Disk extends Model
         return $this->hasMany(DiskDriverField::class);
     }
 
+    public function diskLogs()
+    {
+        return $this->hasMany(DiskLog::class);
+    }
+
     public function upload(String $fileContents, String $filename)
     {
         if (config('crypt.encrypt_uploads') && $this->encode_files) {
@@ -49,6 +54,7 @@ class Disk extends Model
 
         // upload
         $this->build?->put($filename, $fileContents);
+        $this->fileLog('upload', $this->decodedFilename($filename));
         return true;
     }
 
@@ -66,6 +72,9 @@ class Disk extends Model
         }
 
         $decodedFilename = $this->decodedFilename($file);
+
+        $this->fileLog('download', $decodedFilename);
+
         return response()->attachment($contents, $decodedFilename, MimeType::detectByFileExtension($decodedFilename));
     }
 
@@ -73,6 +82,8 @@ class Disk extends Model
     {
         if ($this->build?->exists($file)) {
             $this->build?->delete($file);
+
+            $this->fileLog('delete', $this->decodedFilename($file));
         } else {
             abort(500, 'Unable to pull file from disk.');
         }
@@ -196,5 +207,18 @@ class Disk extends Model
         $info = $gpg->import($pubKey);
         $encKey = $gpg->addencryptkey($info['fingerprint']);
         return $gpg->encrypt($contents);
+    }
+
+    private function fileLog(String $type, String $filename)
+    {
+        if(!DiskLog::verifyType($type)) {
+            throw new \Exception("Ineligible log type used.  Please contact a system administrator.");
+        }
+
+        $this->diskLogs()->create([
+            'user_id' => request()->user()->id,
+            'file' => $filename,
+            'type' => $type,
+        ]);
     }
 }
