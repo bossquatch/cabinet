@@ -23,23 +23,28 @@ return [
         'fields' => [
             'name',
             'color_class',
+            'vue_icon',
         ],
         'types' => [
             [
                 'name' => 'upload',
                 'color_class' => 'blue',
+                'vue_icon' => 'Upload'
             ],
             [
                 'name' => 'download',
                 'color_class' => 'green',
+                'vue_icon' => 'Download'
             ],
             [
                 'name' => 'backup',
                 'color_class' => 'purple',
+                'vue_icon' => 'Duplicate'
             ],
             [
                 'name' => 'delete',
                 'color_class' => 'red',
+                'vue_icon' => 'Trash'
             ],
         ],
     ],

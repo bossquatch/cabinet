@@ -37,6 +37,10 @@
                                 <jet-nav-link v-if="$page.props.user.is_admin" :href="route('driver.index')" :active="route().current('driver.index')">
                                     Edit Drivers
                                 </jet-nav-link>
+
+                                <jet-nav-link v-if="$page.props.user.is_admin" :href="route('log.index')" :active="route().current('log.index')">
+                                    Disk Logs
+                                </jet-nav-link>
                             </div>
                         </div>
 

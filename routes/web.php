@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\DriverFieldController;
 use App\Http\Controllers\DiskController;
+use App\Http\Controllers\DiskLogController;
 use App\Http\Controllers\DiskDriverFieldController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\Auth\OracleIDCSSocialiteController;
@@ -133,10 +134,12 @@ Route::get('/disk/{disk}/files/delete', [DiskController::class, 'deleteFile'])
     ->name('disk.file-delete');
 
 /**
- * File Routes
+ * Log Routes
  */
 
-
+Route::get('/log', [DiskLogController::class, 'index'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('log.index');
 
 /*
 Route::get('/test', function () {
