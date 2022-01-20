@@ -8,7 +8,7 @@
 
         <div>
             <div class="py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <update-disk-name-form :disk="disk" />
+                <update-disk-name-form :disk="disk" :backup_disks="backup_disks" />
 
                 <disk-field-manager class="mt-10 sm:mt-0" :disk="disk" :fields="driverFields" />
             </div>
@@ -27,6 +27,7 @@
         props: [
             'disk',
             'driverFields',
+            'backup_disks',
         ],
 
         components: {

@@ -46,6 +46,12 @@ class DiskController extends Controller
                     'display_name' => $driver->display_name,
                 ];
             }),
+            'backup_disks' => $this->allowedDisks()->map(function ($disk) {
+                return [
+                    'id' => $disk->id,
+                    'name' => $disk->name,
+                ];
+            }),
         ]);
     }
 
@@ -64,6 +70,7 @@ class DiskController extends Controller
             'name' => ['required', 'string', 'max:60'],
             'driver_id' => ['required', 'integer'],
             'team_id' => ['required', Rule::in($team_ids)],
+            'backup_id' => ['nullable', 'integer'],
             'private' => ['required', 'boolean'],
             'encode_files' => ['required', 'boolean'],
         ])->validateWithBag('createDisk');
@@ -94,7 +101,13 @@ class DiskController extends Controller
                     //'required' => $field->required ? '1' : '0',
                     'value' => $driverField ? ($field->encrypt ? \Illuminate\Support\Facades\Crypt::decryptString($driverField->value) : $driverField->value) : null,
                 ];
-            })
+            }),
+            'backup_disks' => Disk::where('id', '!=', $disk->id)->whereIn('team_id', auth()->user()->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get()->map(function ($disk) {
+                return [
+                    'id' => $disk->id,
+                    'name' => $disk->name,
+                ];
+            }),
         ]);
     }
 
@@ -123,6 +136,7 @@ class DiskController extends Controller
         Validator::make($input, [
             'name' => ['required', 'string', 'max:60'],
             'private' => ['required', 'boolean'],
+            'backup_id' => ['nullable', 'integer'],
         ])->validateWithBag('updateDiskName');
         
         $disk->update($input);

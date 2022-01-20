@@ -8,7 +8,7 @@
 
         <div>
             <div class="py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <create-disk-form :drivers="drivers" />
+                <create-disk-form :drivers="drivers" :backup_disks="backup_disks" />
             </div>
         </div>
     </app-layout>
@@ -20,7 +20,7 @@
     import CreateDiskForm from '@/Pages/Disks/Partials/CreateDiskForm.vue'
 
     export default defineComponent({
-        props: ['drivers'],
+        props: ['drivers', 'backup_disks'],
 
         components: {
             AppLayout,

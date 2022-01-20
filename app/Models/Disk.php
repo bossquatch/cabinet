@@ -38,8 +38,21 @@ class Disk extends Model
         return $this->hasMany(DiskLog::class);
     }
 
-    public function upload(String $fileContents, String $filename)
+    public function backupDisk()
     {
+        return $this->belongsTo(Disk::class, 'backup_id');
+    }
+
+    public function relientDisks()
+    {
+        return $this->hasMany(Disk::class, 'backup_id');
+    }
+
+    public function upload(String $fileContents, String $filename, bool $backup = false)
+    {
+        if ($this->backupDisk()->exists()) {
+            $this->backupDisk->upload($fileContents, $filename, true);
+        }
         if (config('crypt.encrypt_uploads') && $this->encode_files) {
             // encrypt file contents
             $fileContents = $this->encode($fileContents);
@@ -54,7 +67,7 @@ class Disk extends Model
 
         // upload
         $this->build?->put($filename, $fileContents);
-        $this->fileLog('upload', $this->decodedFilename($filename));
+        $this->fileLog($backup ? 'backup' : 'upload', $this->decodedFilename($filename));
         return true;
     }
 

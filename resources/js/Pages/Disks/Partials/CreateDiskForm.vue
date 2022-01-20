@@ -25,6 +25,15 @@
             </div>
 
             <div class="col-span-6 sm:col-span-4">
+                <jet-label for="backup_disk" value="Backup Disk" />
+                <custom-select id="backup_disk" v-model="form.backup_id" class="md:w-1/2">
+                    <option value="">No backup disk</option>
+                    <option v-for="backup_disk in backup_disks" :key="backup_disk.id" :selected="backup_disk.id == form.backup_id" :value="backup_disk.id">{{ backup_disk.name }}</option>
+                </custom-select>
+                <jet-input-error :message="form.errors.backup_id" />
+            </div>
+
+            <div class="col-span-6 sm:col-span-4">
                 <custom-checkbox :name="'Private*'" v-model="form.private" />
                 <custom-checkbox :name="'Encode Files'" v-model="form.encode_files" />
             </div>
@@ -55,7 +64,7 @@
     import CustomSelect from '@/BuildingBlocks/Select.vue'
 
     export default defineComponent({
-        props: ['drivers'],
+        props: ['drivers', 'backup_disks'],
 
         components: {
             JetButton,
@@ -72,6 +81,7 @@
                 form: this.$inertia.form({
                     name: '',
                     driver_id: null,
+                    backup_id: null,
                     private: 0,
                     team_id: this.$page.props.user.current_team_id,
                     encode_files: 1,
