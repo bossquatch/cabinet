@@ -56,7 +56,7 @@
             <div class="grid grid-cols-1 gap-3 mt-6">
                 <div class="col-span-1">
                     <a :href="route('oracle-idcs.login')" class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
-                        <span>Sign in with Oracle IDCS</span>
+                        <span>Sign in with Polk One</span>
 
                         <!--
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">

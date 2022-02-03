@@ -25614,7 +25614,7 @@ var _hoisted_12 = {
 };
 var _hoisted_13 = ["href"];
 
-var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Sign in with Oracle IDCS", -1
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Sign in with Polk One", -1
 /* HOISTED */
 );
 
