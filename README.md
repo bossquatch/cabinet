@@ -1,3 +1,23 @@
+## Table of Contents
+
+1. [About Cabinet](#about-cabinet)
+2. [Build Requirements](#build-requirements)
+3. [Learning Cabinet](#learning-cabinet)
+    1. [Basic User](#basic-user)
+    2. [Team Leader](#team-leader)
+    3. [Administrator](#administrator)
+4. [API Methods](#api-methods)
+    1. [`/user`](#user)
+        - [GET](#method-get)
+    2. [`/disks`](#disks)
+        - [GET](#method-get-1)
+    3. [`/disks/{id}/files`](#disksidfiles)
+        - [GET](#method-get-2)
+        - [POST](#method-post)
+        - [DELETE](#method-delete)
+    4. [`/disks/{id}/files/download`](#disksidfilesdownload)
+        - [GET](#method-get-3)
+
 ## About Cabinet
 
 Cabinet is a simple software solution for maintaining enterprise file handling and file transfer utilizing cloud file storage.  Functionality includes:
@@ -90,7 +110,7 @@ All methods begin with `/api`
 
 ### `/user`
 
-#### Method: <font color="green">GET</font>
+#### Method: GET
 
 Parameters:
 
@@ -115,7 +135,7 @@ Example Return:
 
 ### `/disks`
 
-#### Method: <font color="green">GET</font>
+#### Method: GET
 
 Parameters:
 
@@ -152,7 +172,7 @@ Example Return:
 
 \* **id** is in regards to disk ID
 
-#### Method: <font color="green">GET</font>
+#### Method: GET
 
 Parameters:
 
@@ -174,7 +194,7 @@ Example Return:
 > 	]
 > }
 
-#### Method: <font color="purple">POST</font>
+#### Method: POST
 
 Parameters:
 
@@ -186,7 +206,7 @@ Example Return:
 > 	"status": "uploaded"
 > }
 
-#### Method: <font color="red">DELETE</font>
+#### Method: DELETE
 
 Parameters:
 
@@ -202,7 +222,7 @@ Example Return:
 
 \* **id** is in regards to disk ID
 
-#### Method: <font color="green">GET</font>
+#### Method: GET
 
 Parameters:
 
