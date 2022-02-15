@@ -83,3 +83,39 @@ Cabinet is a simple software solution for maintaining enterprise file handling a
     - Give what permissions are needed for the token
     - Click **"Create"**
     - Copy the token when displayed on the screen, you will only be shown the code once
+
+## API Methods
+
+All methods begin with `/api`
+
+### `/user`
+
+#### Method: <font color="green">GET</font>
+
+*upcoming information*
+
+### `/disks`
+
+#### Method: <font color="green">GET</font>
+
+*upcoming information*
+
+### `/disks/{id}/files`
+
+#### Method: <font color="green">GET</font>
+
+*upcoming information*
+
+#### Method: <font color="purple">POST</font>
+
+*upcoming information*
+
+#### Method: <font color="red">DELETE</font>
+
+*upcoming information*
+
+### `/disks/{id}/files/download`
+
+#### Method: <font color="green">GET</font>
+
+*upcoming information*

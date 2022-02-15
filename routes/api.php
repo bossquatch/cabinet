@@ -23,6 +23,6 @@ Route::middleware('auth:sanctum')->get('/disks', [ApiDiskController::class, 'ind
 
 Route::middleware('auth:sanctum')->get('/disks/{id}/files', [ApiDiskController::class, 'show']);
 Route::middleware('auth:sanctum')->post('/disks/{id}/files', [ApiDiskController::class, 'upload']);
+Route::middleware('auth:sanctum')->delete('/disks/{id}/files', [ApiDiskController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->get('/disks/{id}/files/download', [ApiDiskController::class, 'download']);
-Route::middleware('auth:sanctum')->get('/disks/{id}/files/delete', [ApiDiskController::class, 'destroy']);
