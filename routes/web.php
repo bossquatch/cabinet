@@ -12,6 +12,7 @@ use App\Http\Controllers\DiskController;
 use App\Http\Controllers\DiskLogController;
 use App\Http\Controllers\DiskDriverFieldController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\KeyController;
 use App\Http\Controllers\Auth\OracleIDCSSocialiteController;
 
 /*
@@ -56,6 +57,18 @@ Route::get('/upload', [UploadController::class, 'index'])
 Route::post('/upload', [UploadController::class, 'upload'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('upload.file');
+
+/**
+ * Key routes
+ */
+
+Route::get('/key', [KeyController::class, 'index'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.index');
+
+Route::get('/key/create', [KeyController::class, 'create'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.create');
 
 /**
  * Driver routes
