@@ -16,8 +16,8 @@ class CreateKeysTable extends Migration
         Schema::create('keys', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->string('description', 300);
-            $table->string('value', 200);
+            $table->string('description', 100);
+            $table->string('value', 50);
             $table->boolean('public')->default(false);
             $table->timestamps();
         });

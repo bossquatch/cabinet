@@ -70,6 +70,14 @@ Route::get('/key/create', [KeyController::class, 'create'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('key.create');
 
+Route::post('/key', [KeyController::class, 'store'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.store');
+
+Route::get('/key/{key}', [KeyController::class, 'show'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.show');
+
 /**
  * Driver routes
  */
