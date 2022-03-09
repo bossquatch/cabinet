@@ -23,6 +23,9 @@
                                                 Filename
                                             </th>
                                             <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                Size
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                                 Last Modified
                                             </th>
                                             <th scope="col" class="relative px-6 py-3">
@@ -35,6 +38,9 @@
                                             <tr v-for="(file, index) in files" :key="file" :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
                                                 <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                                     {{ file.name }}
+                                                </td>
+                                                <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                                    {{ file.size }}
                                                 </td>
                                                 <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                                     {{ file.last_modified }}

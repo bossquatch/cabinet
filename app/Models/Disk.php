@@ -51,7 +51,7 @@ class Disk extends Model
     public function upload(String $fileContents, String $filename, bool $backup = false)
     {
         $fileSize = $this->fileSize($fileContents);
-        
+
         if ($this->backupDisk()->exists()) {
             $this->backupDisk->upload($fileContents, $filename, true);
         }
@@ -109,6 +109,11 @@ class Disk extends Model
     public function lastModifiedDate(String $file)
     {
         return Carbon::parse($this->build?->lastModified($file))?->format('H:i m-d-Y');
+    }
+
+    public function getSize(String $file)
+    {
+        return $this->formatBytes($this->build?->size($file));
     }
 
     public function getBuildAttribute()
