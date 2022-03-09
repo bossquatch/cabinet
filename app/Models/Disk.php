@@ -50,6 +50,8 @@ class Disk extends Model
 
     public function upload(String $fileContents, String $filename, bool $backup = false)
     {
+        $fileSize = $this->fileSize($fileContents);
+        
         if ($this->backupDisk()->exists()) {
             $this->backupDisk->upload($fileContents, $filename, true);
         }
@@ -67,7 +69,7 @@ class Disk extends Model
 
         // upload
         $this->build?->put($filename, $fileContents);
-        $this->fileLog($backup ? 'backup' : 'upload', $this->decodedFilename($filename));
+        $this->fileLog($backup ? 'backup' : 'upload', $this->decodedFilename($filename), $fileSize);
         return true;
     }
 
@@ -86,7 +88,7 @@ class Disk extends Model
 
         $decodedFilename = $this->decodedFilename($file);
 
-        $this->fileLog('download', $decodedFilename);
+        $this->fileLog('download', $decodedFilename, $this->fileSize($contents));
 
         return response()->attachment($contents, $decodedFilename, MimeType::detectByFileExtension($decodedFilename));
     }
@@ -222,7 +224,7 @@ class Disk extends Model
         return $gpg->encrypt($contents);
     }
 
-    private function fileLog(String $type, String $filename)
+    private function fileLog(String $type, String $filename, String $size = null)
     {
         if(!DiskLog::verifyType($type)) {
             throw new \Exception("Ineligible log type used.  Please contact a system administrator.");
@@ -230,8 +232,20 @@ class Disk extends Model
 
         $this->diskLogs()->create([
             'user_id' => request()->user()->id,
-            'file' => $filename,
+            'file' => $size ? ($filename . ' (' . $size . ')') : $filename,
             'type' => $type,
         ]);
+    }
+
+    private function fileSize(String $content)
+    {
+        return $this->formatBytes(\strlen($content));
+    }
+
+    private function formatBytes($size, $precision = 2) { 
+        $base = \log($size, 1024);
+        $suffixes = array('', 'K', 'M', 'G', 'T');   
+    
+        return \round(\pow(1024, $base - \floor($base)), $precision) .' '. $suffixes[\floor($base)] . 'B';
     }
 }
