@@ -170,6 +170,7 @@ class DiskController extends Controller
             $files[] = [
                 'name' => $filename,
                 'last_modified' => $disk->lastModifiedDate($filename),
+                'size' => $disk->getSize($filename),
             ];
         }
 
