@@ -78,6 +78,10 @@ Route::get('/key/{key}', [KeyController::class, 'show'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('key.show');
 
+Route::put('/key/{key}', [KeyController::class, 'update'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.update');
+
 /**
  * Driver routes
  */

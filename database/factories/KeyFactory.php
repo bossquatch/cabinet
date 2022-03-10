@@ -25,6 +25,7 @@ class KeyFactory extends Factory
     {
         return [
             'user_id' => User::all()->random()->id,
+            'owner_id' => User::all()->random()->id,
             'description' => $this->faker->sentence(),
             'value' => Str::random(10),
             'public' => false,

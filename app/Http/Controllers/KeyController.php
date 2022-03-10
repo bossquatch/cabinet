@@ -20,9 +20,12 @@ class KeyController extends Controller
         return Inertia::render('Keys/Index', [
             'keys' => $this->allowedKeys()->map(function ($key) {
                 return [
+                    'user_id' => $key->user_id,
+                    'owner_id' => $key->owner_id,
                     'description' => $key->description,
                     'value' => $key->value,
                     'public' => $key->public,
+                    'edit_url' => route('key.show', $key),
                 ];
             }),
         ]);
@@ -50,6 +53,7 @@ class KeyController extends Controller
 
         Validator::make($input, [
             'user_id' => ['required'],
+            'owner_id' => ['required'],
             'description' => ['required', 'string', 'max:100'],
             'value' => ['required', 'string', 'max:50'],
             'public' => ['required', 'boolean'],
@@ -69,8 +73,30 @@ class KeyController extends Controller
     public function show(Key $key)
     {
         return Inertia::render('Keys/Show', [
-            'key' => $key->load('users'),
+            'skey' => $key->load('user'),
         ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Key  $key
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Key $key)
+    {
+        $input = $request->all();
+
+        Validator::make($input, [
+            'description' => ['required', 'string', 'max:100'],
+            'value' => ['required', 'string', 'max:50'],
+            'public' => ['required', 'boolean'],
+        ])->validateWithBag('updateKey');
+        
+        $key->update($input);
+
+        return back(303);
     }
 
     private function allowedKeys()

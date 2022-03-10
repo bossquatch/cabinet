@@ -8,7 +8,7 @@
 
         <div>
             <div class="py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                Edit Key Form Goes Here
+                <update-key-form :skey="skey" />
             </div>
         </div>
     </app-layout>
@@ -18,15 +18,17 @@
     import { defineComponent } from 'vue'
     import AppLayout from '@/Layouts/AppLayout.vue'
     import JetSectionBorder from '@/Jetstream/SectionBorder.vue'
+    import UpdateKeyForm from '@/Pages/Keys/Partials/UpdateKeyForm.vue'
 
     export default defineComponent({
         props: [
-            'key',
+            'skey',
         ],
 
         components: {
             AppLayout,
             JetSectionBorder,
+            UpdateKeyForm,
         },
     })
 </script>

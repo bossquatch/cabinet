@@ -51,7 +51,7 @@
                                                     {{ key.public ? "Yes" : "No" }}
                                                 </td>
                                                 <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                                    <custom-nav-link :href="key.index" class="text-indigo-600 hover:text-indigo-900">Edit</custom-nav-link>
+                                                    <custom-nav-link v-if="key.user_id == key.owner_id" :href="key.edit_url" class="text-indigo-600 hover:text-indigo-900">Edit</custom-nav-link>
                                                 </td>
                                             </tr>
                                         </template>
