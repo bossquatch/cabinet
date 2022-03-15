@@ -39,7 +39,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <template v-if="keys.length">
+                                        <template v-if="keys.length || sharedKeys.length">
+                                            <template v-if="keys.length">
                                             <tr v-for="(key, index) in keys" :key="key" :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
                                                 <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                                     {{ key.description }}
@@ -51,9 +52,26 @@
                                                     {{ key.public ? "Yes" : "No" }}
                                                 </td>
                                                 <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                                    <custom-nav-link v-if="key.user_id == key.owner_id" :href="key.edit_url" class="text-indigo-600 hover:text-indigo-900">Edit</custom-nav-link>
+                                                    <custom-nav-link v-if="myID == key.owner_id" :href="key.edit_url" class="text-indigo-600 hover:text-indigo-900">Edit</custom-nav-link>
                                                 </td>
                                             </tr>
+                                            </template>
+                                            <template v-if="sharedKeys.length">
+                                                <tr v-for="(key, index) in sharedKeys" :key="key" :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
+                                                    <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                                        {{ key.description }}
+                                                    </td>
+                                                    <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                        {{ key.value }}
+                                                    </td>
+                                                    <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                        {{ key.public ? "Yes" : "No" }}
+                                                    </td>
+                                                    <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
+                                                        <custom-nav-link v-if="myID == key.owner_id" :href="key.edit_url" class="text-indigo-600 hover:text-indigo-900">Edit</custom-nav-link>
+                                                    </td>
+                                                </tr>
+                                            </template>
                                         </template>
                                         <template v-else>
                                             <tr class="bg-red-300">
@@ -81,7 +99,7 @@
 
     export default defineComponent({
         props: [
-            'keys',
+            'keys', 'sharedKeys', 'myID',
         ],
 
         components: {

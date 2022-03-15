@@ -27,6 +27,10 @@
         </template>
 
         <template #actions>
+            <jet-action-message :on="form.recentlySuccessful" class="mr-3">
+                Created.
+            </jet-action-message>
+
             <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 Create
             </jet-button>
@@ -36,6 +40,7 @@
 
 <script>
     import { defineComponent } from 'vue'
+    import JetActionMessage from '@/Jetstream/ActionMessage'
     import JetButton from '@/Jetstream/Button.vue'
     import JetFormSection from '@/Jetstream/FormSection.vue'
     import JetInput from '@/Jetstream/Input.vue'
@@ -46,6 +51,7 @@
 
     export default defineComponent({
         components: {
+            JetActionMessage,
             JetButton,
             JetFormSection,
             JetInput,

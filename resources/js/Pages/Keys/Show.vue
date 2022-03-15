@@ -9,6 +9,10 @@
         <div>
             <div class="py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <update-key-form :skey="skey" />
+                
+                <share-key-form v-if="skey.public == false" :skey="skey" />
+
+                <revoke-key-form v-if="skey.public == false" :skey="skey" />
             </div>
         </div>
     </app-layout>
@@ -19,6 +23,8 @@
     import AppLayout from '@/Layouts/AppLayout.vue'
     import JetSectionBorder from '@/Jetstream/SectionBorder.vue'
     import UpdateKeyForm from '@/Pages/Keys/Partials/UpdateKeyForm.vue'
+    import ShareKeyForm from '@/Pages/Keys/Partials/ShareKeyForm.vue'
+    import RevokeKeyForm from '@/Pages/Keys/Partials/RevokeKeyForm.vue'
 
     export default defineComponent({
         props: [
@@ -29,6 +35,8 @@
             AppLayout,
             JetSectionBorder,
             UpdateKeyForm,
+            ShareKeyForm,
+            RevokeKeyForm,
         },
     })
 </script>

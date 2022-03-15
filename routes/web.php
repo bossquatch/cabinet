@@ -82,6 +82,14 @@ Route::put('/key/{key}', [KeyController::class, 'update'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('key.update');
 
+Route::post('/key/share', [KeyController::class, 'share'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.share');
+
+Route::post('/key/{key}', [KeyController::class, 'destroy'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.destroy');
+
 /**
  * Driver routes
  */
