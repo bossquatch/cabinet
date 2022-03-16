@@ -133,9 +133,11 @@ class KeyController extends Controller
             'description' => ['required', 'string', 'max:100'],
             'value' => ['required', 'string', 'max:50'],
             'public' => ['required', 'boolean'],
-        ], $this->rules(), [
-            'shared_email.exists' => __('We were unable to find a registered user with this email address.'),
-        ])->validateWithBag('shareKey');
+        ])->after(
+            $this->ensureEmailExists($input)
+        )->after(
+            $this->ensureKeyNotAlreadyShared($input)
+        )->validateWithBag('shareKey');
 
         $sharedKey = SharedKey::create($input);
 
@@ -143,21 +145,10 @@ class KeyController extends Controller
     }
 
     /**
-     * Get the validation rules for adding a shared key.
-     *
-     * @return array
-     */
-    protected function rules()
-    {
-        return array_filter([
-            'shared_email' => ['required', 'email', 'exists:users'],
-        ]);
-    }
-
-    /**
      * Remove a resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param Key $key
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, Key $key)
@@ -166,7 +157,11 @@ class KeyController extends Controller
 
         Validator::make($input, [
             'shared_email' => ['required', 'string', 'max:100'],
-        ])->validateWithBag('revokeKey');
+        ])->after(
+            $this->ensureEmailExists($input)
+        )->after(
+            $this->ensureKeyExists($key, $input)
+        )->validateWithBag('revokeKey');
         
         SharedKey::select('*')
             ->where('key_id', '=', $key->id)
@@ -204,5 +199,71 @@ class KeyController extends Controller
         return SharedKey::select('*')
             ->where('shared_email', '=', $user->email)
             ->get();
+    }
+
+    /**
+     * Ensure that the key is not already being shared with the user.
+     *
+     * @param  mixed  $input
+     * @return \Closure
+     */
+    protected function ensureKeyNotAlreadyShared(mixed $input)
+    {
+        $shared_key = SharedKey::select('*')
+            ->where('key_id', '=', $input['key_id'])
+            ->where('shared_email', '=', $input['shared_email'])
+            ->exists();
+
+        return function ($validator) use ($shared_key) {
+            $validator->errors()->addIf(
+                $shared_key,
+                'shared_email',
+                __('This user already shares this key.')
+            );
+        };
+    }
+
+    /**
+     * Ensure that the key exists.
+     *
+     * @param Key $key
+     * @param  mixed  $input
+     * @return \Closure
+     */
+    protected function ensureKeyExists(Key $key, mixed $input)
+    {
+        $shared_key = SharedKey::select('*')
+            ->where('key_id', '=', $key->id)
+            ->where('shared_email', '=', $input['shared_email'])
+            ->exists();
+
+        return function ($validator) use ($shared_key) {
+            $validator->errors()->addIf(
+                !$shared_key,
+                'shared_email',
+                __('This key is not shared with this user.')
+            );
+        };
+    }
+
+    /**
+     * Ensure that the email exists.
+     *
+     * @param  mixed  $input
+     * @return \Closure
+     */
+    protected function ensureEmailExists(mixed $input)
+    {
+        $email = User::select('*')
+            ->where('email', '=', $input['shared_email'])
+            ->exists();
+
+        return function ($validator) use ($email) {
+            $validator->errors()->addIf(
+                !$email,
+                'shared_email',
+                __('We were unable to find a registered user with this email address.')
+            );
+        };
     }
 }
