@@ -59,6 +59,7 @@
         data() {
             return {
                 form: this.$inertia.form({
+                    key_id: this.skey.id,
                     shared_email: '',
                 })
             }
@@ -66,7 +67,7 @@
 
         methods: {
             revokeKey() {
-                this.form.post(route('key.destroy', this.skey), {
+                this.form.post(route('key.destroy'), {
                     errorBag: 'revokeKey',
                     preserveScroll: true
                 });

@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Illuminate\Validation\Rule;
 use Laravel\Jetstream\Jetstream;
-use DB;
 
 class KeyController extends Controller
 {
@@ -136,6 +135,8 @@ class KeyController extends Controller
         ])->after(
             $this->ensureEmailExists($input)
         )->after(
+            $this->ensureEmailNotCurrentUser($input)
+        )->after(
             $this->ensureKeyNotAlreadyShared($input)
         )->validateWithBag('shareKey');
 
@@ -151,25 +152,26 @@ class KeyController extends Controller
      * @param Key $key
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, Key $key)
+    public function destroy(Request $request)
     {
         $input = $request->all();
 
         Validator::make($input, [
+            'key_id' => ['required'],
             'shared_email' => ['required', 'string', 'max:100'],
         ])->after(
             $this->ensureEmailExists($input)
         )->after(
-            $this->ensureKeyExists($key, $input)
+            $this->ensureKeyExists($input)
         )->validateWithBag('revokeKey');
         
         SharedKey::select('*')
-            ->where('key_id', '=', $key->id)
-            ->where('shared_email', '=', $input)
+            ->where('key_id', '=', $input['key_id'])
+            ->where('shared_email', '=', $input['shared_email'])
             ->firstorfail()
             ->delete();
 
-        return redirect()->route('key.show', ['key' => $key->id]);
+        return redirect()->route('key.show', ['key' => $input['key_id']]);
     }
 
     /**
@@ -202,6 +204,52 @@ class KeyController extends Controller
     }
 
     /**
+     * Ensure that the email exists.
+     *
+     * @param  mixed  $input
+     * @return \Closure
+     */
+    protected function ensureEmailExists(mixed $input)
+    {
+        $email = User::select('*')
+            ->where('email', '=', $input['shared_email'])
+            ->exists();
+
+        return function ($validator) use ($email) {
+            $validator->errors()->addIf(
+                !$email,
+                'shared_email',
+                __('We were unable to find a registered user with this email address.')
+            );
+        };
+    }
+
+    /**
+     * Ensure that the email is not the current user.
+     *
+     * @param  mixed  $input
+     * @return \Closure
+     */
+    protected function ensureEmailNotCurrentUser(mixed $input)
+    {
+        $user = auth()->user();
+        $myEmail = false;
+
+        if ($input['shared_email'] == $user->email)
+        {
+            $myEmail = true;
+        }
+
+        return function ($validator) use ($myEmail) {
+            $validator->errors()->addIf(
+                $myEmail,
+                'shared_email',
+                __('You already have access to this key.')
+            );
+        };
+    }
+
+    /**
      * Ensure that the key is not already being shared with the user.
      *
      * @param  mixed  $input
@@ -226,14 +274,13 @@ class KeyController extends Controller
     /**
      * Ensure that the key exists.
      *
-     * @param Key $key
      * @param  mixed  $input
      * @return \Closure
      */
-    protected function ensureKeyExists(Key $key, mixed $input)
+    protected function ensureKeyExists(mixed $input)
     {
         $shared_key = SharedKey::select('*')
-            ->where('key_id', '=', $key->id)
+            ->where('key_id', '=', $input['key_id'])
             ->where('shared_email', '=', $input['shared_email'])
             ->exists();
 
@@ -242,27 +289,6 @@ class KeyController extends Controller
                 !$shared_key,
                 'shared_email',
                 __('This key is not shared with this user.')
-            );
-        };
-    }
-
-    /**
-     * Ensure that the email exists.
-     *
-     * @param  mixed  $input
-     * @return \Closure
-     */
-    protected function ensureEmailExists(mixed $input)
-    {
-        $email = User::select('*')
-            ->where('email', '=', $input['shared_email'])
-            ->exists();
-
-        return function ($validator) use ($email) {
-            $validator->errors()->addIf(
-                !$email,
-                'shared_email',
-                __('We were unable to find a registered user with this email address.')
             );
         };
     }
