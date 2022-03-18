@@ -149,7 +149,6 @@ class KeyController extends Controller
      * Remove a resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param Key $key
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
