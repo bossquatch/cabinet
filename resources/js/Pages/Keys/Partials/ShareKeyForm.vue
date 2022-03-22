@@ -60,11 +60,7 @@
             return {
                 form: this.$inertia.form({
                     key_id: this.skey.id,
-                    owner_id: this.skey.owner_id,
                     shared_email: '',
-                    description: this.skey.description,
-                    value: this.skey.value,
-                    public: this.skey.public,
                 })
             }
         },

@@ -1,32 +1,40 @@
 <template>
-    <jet-section-border />
-        <jet-form-section @submitted="revokeKey">
-            <template #title>
-                Revoke Key Access
-            </template>
+    <div v-if="shared_users.length > 0">
+        <jet-section-border />
+            <jet-form-section @submitted="revokeKey">
+                <template #title>
+                    Revoke Key Access
+                </template>
 
-            <template #description>
-                Revoke a user's access to this key.
-            </template>
+                <template #description>
+                    Revoke a user's access to this key.
+                </template>
 
-            <template #form>
-                <div class="col-span-6 sm:col-span-4">
-                    <jet-label for="shared_email" value="Email" />
-                    <jet-input id="shared_email" type="text" class="block w-full mt-1" v-model="form.shared_email" autofocus />
-                    <jet-input-error :message="form.errors.shared_email" class="mt-2" />
-                </div>
-            </template>
+                <template #form>
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between" v-for="user in shared_users" :key="user.id">
+                            <div class="flex items-center">
+                                <jet-button @click="userBeingRemoved = user" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                    Revoke
+                                </jet-button>
+                            </div>
 
-            <template #actions>
-                <jet-action-message :on="form.recentlySuccessful" class="mr-3">
-                    Revoked.
-                </jet-action-message>
+                            <div class="flex items-center">
+                                <div class="w-max ml-4">
+                                    {{ user.name }}
+                                </div>
+                            </div>
 
-                <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Revoke Access
-                </jet-button>
-            </template>
-        </jet-form-section>
+                            <div class="flex items-center">
+                                <div class="w-max ml-4">
+                                    {{ user.email }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </jet-form-section>
+    </div>
 </template>
 
 <script>
@@ -54,22 +62,22 @@
             JetSectionBorder,
         },
 
-        props: ['skey'],
+        props: ['skey', 'shared_users'],
 
         data() {
             return {
-                form: this.$inertia.form({
-                    key_id: this.skey.id,
-                    shared_email: '',
-                })
+                form: this.$inertia.form(),
+                userBeingRemoved: null,
             }
         },
 
         methods: {
-            revokeKey() {
-                this.form.post(route('key.destroy'), {
+            revokeKey(user) {
+                this.form.delete(route('key.destroy', [this.skey, this.userBeingRemoved]), {
                     errorBag: 'revokeKey',
-                    preserveScroll: true
+                    preserveScroll: true,
+                    preserveState: true,
+                    onSuccess: () => (this.userBeingRemoved = null),
                 });
             },
         },

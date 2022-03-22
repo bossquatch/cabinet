@@ -17,8 +17,8 @@
 
             <div class="col-span-6 sm:col-span-4">
                 <jet-label for="value" value="Value" />
-                <jet-input id="value" v-model="form.value" class="md:w-1/2" />
-                <jet-input-error :message="form.errors.value" />
+                <jet-input id="value" type="text" class="block w-full mt-1" v-model="form.value" autofocus/>
+                <jet-input-error :message="form.errors.value" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">

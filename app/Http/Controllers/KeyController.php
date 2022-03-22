@@ -87,9 +87,13 @@ class KeyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Key $key)
-    {
+    {   
+        $shared_keys = SharedKey::where('key_id', '=', $key->id)->get();
+        $shared_users = User::whereIn('email', $shared_keys->map(function ($k) { return ['email' => $k->shared_email]; }))->get();
+        
         return Inertia::render('Keys/Show', [
             'skey' => $key->load('user'),
+            'shared_users' => $shared_users,
         ]);
     }
 
@@ -127,11 +131,7 @@ class KeyController extends Controller
 
         Validator::make($input, [
             'key_id' => ['required'],
-            'owner_id' => ['required'],
             'shared_email' => ['required', 'string', 'max:100'],
-            'description' => ['required', 'string', 'max:100'],
-            'value' => ['required', 'string', 'max:50'],
-            'public' => ['required', 'boolean'],
         ])->after(
             $this->ensureEmailExists($input)
         )->after(
@@ -149,28 +149,19 @@ class KeyController extends Controller
      * Remove a resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param \App\Models\Key $key
+     * @param \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
-    {
-        $input = $request->all();
-
-        Validator::make($input, [
-            'key_id' => ['required'],
-            'shared_email' => ['required', 'string', 'max:100'],
-        ])->after(
-            $this->ensureEmailExists($input)
-        )->after(
-            $this->ensureKeyExists($input)
-        )->validateWithBag('revokeKey');
-        
+    public function destroy(Request $request, Key $key, User $user)
+    {   
         SharedKey::select('*')
-            ->where('key_id', '=', $input['key_id'])
-            ->where('shared_email', '=', $input['shared_email'])
+            ->where('key_id', '=', $key->id)
+            ->where('shared_email', '=', $user->email)
             ->firstorfail()
             ->delete();
 
-        return redirect()->route('key.show', ['key' => $input['key_id']]);
+        return redirect()->route('key.show', ['key' => $key->id]);
     }
 
     /**
@@ -197,9 +188,9 @@ class KeyController extends Controller
     {
         $user = auth()->user();
 
-        return SharedKey::select('*')
-            ->where('shared_email', '=', $user->email)
-            ->get();
+        $keys = SharedKey::select('*')->where('shared_email', '=', $user->email)->get();
+
+        return Key::whereIn('id', $keys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))->get();
     }
 
     /**

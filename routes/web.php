@@ -86,7 +86,7 @@ Route::post('/key/share', [KeyController::class, 'share'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('key.share');
 
-Route::post('/key/revoke', [KeyController::class, 'destroy'])
+Route::delete('/key/{key}/{user}', [KeyController::class, 'destroy'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('key.destroy');
 
