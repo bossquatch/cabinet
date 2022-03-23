@@ -13,6 +13,7 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+.DS_Store
 0xEC5D7470-pub.asc
 0xEC5D7470-sec.asc
 0x056D8752-pub.asc

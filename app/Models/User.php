@@ -63,4 +63,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(DiskLog::class);
     }
+
+    public function keys()
+    {
+        return $this->hasMany(Key::class);
+    }
+
+    public function sharedKeys()
+    {
+        return $this->hasMany(SharedKey::class);
+    }
 }

@@ -30,6 +30,10 @@
                                     Upload
                                 </jet-nav-link>
 
+                                <jet-nav-link :href="route('key.index')" :active="route().current('key.index')">
+                                    Keys
+                                </jet-nav-link>
+
                                 <jet-nav-link v-if="$page.props.user.is_admin" :href="route('disk.index')" :active="route().current('disk.index')">
                                     Edit Disks
                                 </jet-nav-link>

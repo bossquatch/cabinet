@@ -12,6 +12,7 @@ use App\Http\Controllers\DiskController;
 use App\Http\Controllers\DiskLogController;
 use App\Http\Controllers\DiskDriverFieldController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\KeyController;
 use App\Http\Controllers\Auth\OracleIDCSSocialiteController;
 
 /*
@@ -56,6 +57,38 @@ Route::get('/upload', [UploadController::class, 'index'])
 Route::post('/upload', [UploadController::class, 'upload'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('upload.file');
+
+/**
+ * Key routes
+ */
+
+Route::get('/key', [KeyController::class, 'index'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.index');
+
+Route::get('/key/create', [KeyController::class, 'create'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.create');
+
+Route::post('/key', [KeyController::class, 'store'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.store');
+
+Route::get('/key/{key}', [KeyController::class, 'show'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.show');
+
+Route::put('/key/{key}', [KeyController::class, 'update'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.update');
+
+Route::post('/key/share', [KeyController::class, 'share'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.share');
+
+Route::delete('/key/{key}/{user}', [KeyController::class, 'destroy'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.destroy');
 
 /**
  * Driver routes
