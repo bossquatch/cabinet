@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Illuminate\Validation\Rule;
 use Laravel\Jetstream\Jetstream;
+use Illuminate\Support\Facades\Crypt;
 
 class KeyController extends Controller
 {
@@ -28,7 +29,7 @@ class KeyController extends Controller
                     'user_id' => $key->user_id,
                     'owner_id' => $key->owner_id,
                     'description' => $key->description,
-                    'value' => $key->value,
+                    'value' => Crypt::decryptString($key->value),
                     'public' => $key->public,
                     'edit_url' => route('key.show', $key),
                 ];
@@ -38,7 +39,7 @@ class KeyController extends Controller
                     'user_id' => $key->user_id,
                     'owner_id' => $key->owner_id,
                     'description' => $key->description,
-                    'value' => $key->value,
+                    'value' => Crypt::decryptString($key->value),
                     'public' => $key->public,
                     'edit_url' => route('key.show', $key),
                 ];
@@ -75,6 +76,8 @@ class KeyController extends Controller
             'public' => ['required', 'boolean'],
         ])->validateWithBag('createKey');
 
+        $input['value'] = Crypt::encryptString($input['value']);
+
         $key = Key::create($input);
 
         return redirect()->route('key.show', ['key' => $key->id]);
@@ -91,6 +94,12 @@ class KeyController extends Controller
         $shared_keys = SharedKey::where('key_id', '=', $key->id)->get();
         $shared_users = User::whereIn('email', $shared_keys->map(function ($k) { return ['email' => $k->shared_email]; }))->get();
         
+        try {
+            $key->value = Crypt::decryptString($key->value);
+        } catch (DecryptException $e) {
+            //
+        }
+
         return Inertia::render('Keys/Show', [
             'skey' => $key->load('user'),
             'shared_users' => $shared_users,
@@ -114,6 +123,8 @@ class KeyController extends Controller
             'public' => ['required', 'boolean'],
         ])->validateWithBag('updateKey');
         
+        $input['value'] = Crypt::encryptString($input['value']);
+
         $key->update($input);
 
         return back(303);
