@@ -18,7 +18,7 @@ class CreateKeysTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('owner_id')->constrained('users');
             $table->string('description');
-            $table->string('value');
+            $table->string('value', 256);
             $table->boolean('public')->default(false);
             $table->timestamps();
         });
