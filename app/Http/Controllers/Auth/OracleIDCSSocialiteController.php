@@ -47,7 +47,7 @@ class OracleIDCSSocialiteController extends Controller
                     ]);
                 }
 
-                Auth::login($finduser);
+                Auth::login($finduser, true);
 
                 return redirect()->route('dashboard');
 
@@ -66,7 +66,7 @@ class OracleIDCSSocialiteController extends Controller
                     'personal_team' => true,
                 ]));
 
-                Auth::login($newUser);
+                Auth::login($newUser, true);
 
                 return redirect()->route('dashboard');
             }
