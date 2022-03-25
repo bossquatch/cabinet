@@ -73,7 +73,7 @@
 
         methods: {
             revokeKey(user) {
-                this.form.delete(route('key.destroy', [this.skey, this.userBeingRemoved]), {
+                this.form.delete(route('key.revoke', [this.skey, this.userBeingRemoved]), {
                     errorBag: 'revokeKey',
                     preserveScroll: true,
                     preserveState: true,

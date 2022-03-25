@@ -164,15 +164,37 @@ class KeyController extends Controller
      * @param \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, Key $key, User $user)
+    public function revoke(Request $request, Key $key, User $user)
     {   
         SharedKey::select('*')
-            ->where('key_id', '=', $key->id)
-            ->where('shared_email', '=', $user->email)
-            ->firstorfail()
-            ->delete();
+        ->where('key_id', '=', $key->id)
+        ->where('shared_email', '=', $user->email)
+        ->firstorfail()
+        ->delete();
 
         return redirect()->route('key.show', ['key' => $key->id]);
+    }
+
+    /**
+     * Remove a resource in storage.
+     *
+     * @param \App\Models\Key $key
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Key $key)
+    {   
+        $currentUser = auth()->user();
+
+        Key::select('*')
+        ->where('id', '=', $key->id)
+        ->firstorfail()
+        ->delete();
+
+        SharedKey::select('*')
+        ->where('key_id', '=', $key->id)
+        ->delete();
+
+        return redirect()->route('key.index');
     }
 
     /**
