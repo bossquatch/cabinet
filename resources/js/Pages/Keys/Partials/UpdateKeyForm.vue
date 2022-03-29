@@ -1,5 +1,5 @@
 <template>
-    <jet-form-section @submitted="updateKey">
+    <jet-form-section @submitted="checkPublic">
         <template #title>
             Key Description
         </template>
@@ -44,6 +44,27 @@
             <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 Save
             </jet-button>
+
+            <!-- Public Key Confirmation Modal -->
+            <jet-dialog-modal :show="confirmingKeyUpdate" @close="closeModal">
+                <template #title>
+                    Public Key
+                </template>
+
+                <template #content>
+                    Are you sure you want to make your key public? Public keys are accessible by all users.
+                </template>
+
+                <template #footer>
+                    <jet-secondary-button @click="closeModal">
+                        Cancel
+                    </jet-secondary-button>
+
+                    <jet-button class="ml-2" @click="updateKey" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        Confirm
+                    </jet-button>
+                </template>
+            </jet-dialog-modal>
         </template>
     </jet-form-section>
 </template>
@@ -51,7 +72,9 @@
 <script>
     import { defineComponent } from 'vue'
     import JetActionMessage from '@/Jetstream/ActionMessage'
+    import JetDialogModal from '@/Jetstream/DialogModal.vue'
     import JetButton from '@/Jetstream/Button'
+    import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetFormSection from '@/Jetstream/FormSection'
     import JetInput from '@/Jetstream/Input'
     import JetInputError from '@/Jetstream/InputError'
@@ -62,7 +85,9 @@
     export default defineComponent({
         components: {
             JetActionMessage,
+            JetDialogModal,
             JetButton,
+            JetSecondaryButton,
             JetFormSection,
             JetInput,
             JetInputError,
@@ -79,16 +104,33 @@
                     description: this.skey.description,
                     value: this.skey.value,
                     public: this.skey.public,
-                })
+                }),
+                confirmingKeyUpdate: false
             }
         },
 
         methods: {
+            checkPublic() {
+                if (this.form.public)
+                {
+                    this.confirmingKeyUpdate = true
+                }
+                else
+                {
+                    this.updateKey()
+                }
+            },
+
             updateKey() {
                 this.form.put(route('key.update', this.skey), {
                     errorBag: 'updateKey',
                     preserveScroll: true
                 });
+                this.closeModal()
+            },
+
+            closeModal() {
+                this.confirmingKeyUpdate = false
             },
         },
     })

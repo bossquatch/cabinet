@@ -1,5 +1,5 @@
 <template>
-    <jet-form-section @submitted="createKey">
+    <jet-form-section @submitted="checkPublic">
         <template #title>
             Key Details
         </template>
@@ -34,6 +34,27 @@
             <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 Create
             </jet-button>
+
+            <!-- Public Key Confirmation Modal -->
+            <jet-dialog-modal :show="confirmingKeyCreation" @close="closeModal">
+                <template #title>
+                    Public Key
+                </template>
+
+                <template #content>
+                    Are you sure you want to make your key public? Public keys are accessible by all users.
+                </template>
+
+                <template #footer>
+                    <jet-secondary-button @click="closeModal">
+                        Cancel
+                    </jet-secondary-button>
+
+                    <jet-button class="ml-2" @click="createKey" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        Confirm
+                    </jet-button>
+                </template>
+            </jet-dialog-modal>
         </template>
     </jet-form-section>
 </template>
@@ -41,7 +62,9 @@
 <script>
     import { defineComponent } from 'vue'
     import JetActionMessage from '@/Jetstream/ActionMessage'
+    import JetDialogModal from '@/Jetstream/DialogModal.vue'
     import JetButton from '@/Jetstream/Button.vue'
+    import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetFormSection from '@/Jetstream/FormSection.vue'
     import JetInput from '@/Jetstream/Input.vue'
     import JetInputError from '@/Jetstream/InputError.vue'
@@ -52,7 +75,9 @@
     export default defineComponent({
         components: {
             JetActionMessage,
+            JetDialogModal,
             JetButton,
+            JetSecondaryButton,
             JetFormSection,
             JetInput,
             JetInputError,
@@ -69,16 +94,32 @@
                     description: '',
                     value: '',
                     public: 0,
-                })
+                }),
+                confirmingKeyCreation: false
             }
         },
 
         methods: {
+            checkPublic() {
+                if (this.form.public)
+                {
+                    this.confirmingKeyCreation = true
+                }
+                else
+                {
+                    this.createKey()
+                }
+            },
+
             createKey() {
                 this.form.post(route('key.store'), {
                     errorBag: 'createKey',
                     preserveScroll: true
                 });
+            },
+
+            closeModal() {
+                this.confirmingKeyCreation = false
             },
         },
     })
