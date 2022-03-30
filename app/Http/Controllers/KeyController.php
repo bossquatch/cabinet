@@ -71,8 +71,8 @@ class KeyController extends Controller
         Validator::make($input, [
             'user_id' => ['required'],
             'owner_id' => ['required'],
-            'description' => ['required', 'string', 'max:100'],
-            'value' => ['required', 'string', 'max:50'],
+            'description' => ['required', 'string', 'max:255'],
+            'value' => ['required', 'string', 'max:512'],
             'public' => ['required', 'boolean'],
         ])->validateWithBag('createKey');
 
@@ -118,8 +118,8 @@ class KeyController extends Controller
         $input = $request->all();
 
         Validator::make($input, [
-            'description' => ['required', 'string', 'max:100'],
-            'value' => ['required', 'string', 'max:50'],
+            'description' => ['required', 'string', 'max:255'],
+            'value' => ['required', 'string', 'max:512'],
             'public' => ['required', 'boolean'],
         ])->validateWithBag('updateKey');
         
@@ -142,7 +142,7 @@ class KeyController extends Controller
 
         Validator::make($input, [
             'key_id' => ['required'],
-            'shared_email' => ['required', 'string', 'max:100'],
+            'shared_email' => ['required', 'string', 'max:255'],
         ])->after(
             $this->ensureEmailExists($input)
         )->after(
