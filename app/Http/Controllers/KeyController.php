@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Key;
 use App\Models\SharedKey;
 use App\Models\User;
+use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -136,10 +137,10 @@ class KeyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function share(Request $request)
+    public function userShare(Request $request)
     {
         $input = $request->all();
-
+        
         Validator::make($input, [
             'key_id' => ['required'],
             'shared_email' => ['required', 'string', 'max:255'],
@@ -149,11 +150,52 @@ class KeyController extends Controller
             $this->ensureEmailNotCurrentUser($input)
         )->after(
             $this->ensureKeyNotAlreadyShared($input)
-        )->validateWithBag('shareKey');
+        )->validateWithBag('shareUserKey');
 
         $sharedKey = SharedKey::create($input);
 
         return redirect()->route('key.show', ['key' => $sharedKey->key_id]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param \App\Models\Team $team
+     * @return \Illuminate\Http\Response
+     */
+    public function teamShare(Request $request, Team $team)
+    {
+        $input = $request->all();
+        
+        foreach ($team->users as $user)
+        {
+            $userInfo = User::where('id', $user->id)->firstorfail();
+            $input['shared_email'] = $userInfo->email;
+            
+            $alreadyShared = SharedKey::select('*')
+                ->where('key_id', '=', $input['key_id'])
+                ->where('shared_email', '=', $input['shared_email'])
+                ->exists();
+
+            if ($alreadyShared)
+            {
+                // Skip
+            }
+            else
+            {
+                Validator::make($input, [
+                    'key_id' => ['required'],
+                    'shared_email' => ['required', 'string', 'max:255'],
+                ])->after(
+                    $this->ensureKeyNotAlreadyShared($input)
+                )->validateWithBag('shareTeamKey');
+        
+                SharedKey::create($input);
+            }
+        }
+
+        return redirect()->route('key.show', ['key' => $input['key_id']]);
     }
 
     /**
@@ -290,28 +332,6 @@ class KeyController extends Controller
                 $shared_key,
                 'shared_email',
                 __('This user already shares this key.')
-            );
-        };
-    }
-
-    /**
-     * Ensure that the key exists.
-     *
-     * @param  mixed  $input
-     * @return \Closure
-     */
-    protected function ensureKeyExists(mixed $input)
-    {
-        $shared_key = SharedKey::select('*')
-            ->where('key_id', '=', $input['key_id'])
-            ->where('shared_email', '=', $input['shared_email'])
-            ->exists();
-
-        return function ($validator) use ($shared_key) {
-            $validator->errors()->addIf(
-                !$shared_key,
-                'shared_email',
-                __('This key is not shared with this user.')
             );
         };
     }

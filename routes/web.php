@@ -82,9 +82,13 @@ Route::put('/key/{key}', [KeyController::class, 'update'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('key.update');
 
-Route::post('/key/share', [KeyController::class, 'share'])
+Route::post('/key/share', [KeyController::class, 'userShare'])
     ->middleware(['auth:sanctum', 'verified'])
-    ->name('key.share');
+    ->name('key.userShare');
+
+Route::post('/key/{team}', [KeyController::class, 'teamShare'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.teamShare');
 
 Route::delete('/key/{key}/{user}', [KeyController::class, 'revoke'])
     ->middleware(['auth:sanctum', 'verified'])

@@ -21738,16 +21738,26 @@ __webpack_require__.r(__webpack_exports__);
   props: ['skey'],
   data: function data() {
     return {
-      form: this.$inertia.form({
+      userForm: this.$inertia.form({
+        key_id: this.skey.id,
+        shared_email: ''
+      }),
+      teamForm: this.$inertia.form({
         key_id: this.skey.id,
         shared_email: ''
       })
     };
   },
   methods: {
-    shareKey: function shareKey() {
-      this.form.post(route('key.share'), {
-        errorBag: 'shareKey',
+    shareUserKey: function shareUserKey() {
+      this.userForm.post(route('key.userShare'), {
+        errorBag: 'shareUserKey',
+        preserveScroll: true
+      });
+    },
+    shareTeamKey: function shareTeamKey() {
+      this.teamForm.post(route('key.teamShare', this.$page.props.user.current_team), {
+        errorBag: 'shareTeamKey',
         preserveScroll: true
       });
     }
@@ -29378,6 +29388,16 @@ var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNod
 
 var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Share ");
 
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Share a key with your current team. ");
+
+var _hoisted_7 = {
+  "class": "col-span-6 sm:col-span-4"
+};
+
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Shared. ");
+
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Share ");
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_jet_section_border = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("jet-section-border");
 
@@ -29394,7 +29414,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_jet_form_section = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("jet-form-section");
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_section_border), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_form_section, {
-    onSubmitted: _ctx.shareKey
+    onSubmitted: _ctx.shareUserKey
   }, {
     title: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_1];
@@ -29410,15 +29430,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         id: "shared_email",
         type: "text",
         "class": "block w-full mt-1",
-        modelValue: _ctx.form.shared_email,
+        modelValue: _ctx.userForm.shared_email,
         "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
-          return _ctx.form.shared_email = $event;
+          return _ctx.userForm.shared_email = $event;
         }),
         autofocus: ""
       }, null, 8
       /* PROPS */
       , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_input_error, {
-        message: _ctx.form.errors.shared_email,
+        message: _ctx.userForm.errors.shared_email,
         "class": "mt-2"
       }, null, 8
       /* PROPS */
@@ -29426,7 +29446,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     actions: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_action_message, {
-        on: _ctx.form.recentlySuccessful,
+        on: _ctx.userForm.recentlySuccessful,
         "class": "mr-3"
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -29439,12 +29459,71 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* PROPS */
       , ["on"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_button, {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
-          'opacity-25': _ctx.form.processing
+          'opacity-25': _ctx.userForm.processing
         }),
-        disabled: _ctx.form.processing
+        disabled: _ctx.userForm.processing
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [_hoisted_5];
+        }),
+        _: 1
+        /* STABLE */
+
+      }, 8
+      /* PROPS */
+      , ["class", "disabled"])];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["onSubmitted"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_form_section, {
+    "class": "mt-6",
+    onSubmitted: _ctx.shareTeamKey
+  }, {
+    description: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_6];
+    }),
+    form: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_label, {
+        "for": "shared_team",
+        value: "Team"
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_input, {
+        id: "shared_team",
+        type: "text",
+        "class": "block w-full mt-1 bg-gray-200 cursor-not-allowed",
+        modelValue: _ctx.$page.props.user.current_team.name,
+        "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+          return _ctx.$page.props.user.current_team.name = $event;
+        }),
+        autofocus: "",
+        readonly: ""
+      }, null, 8
+      /* PROPS */
+      , ["modelValue"])])];
+    }),
+    actions: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_action_message, {
+        on: _ctx.teamForm.recentlySuccessful,
+        "class": "mr-3"
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [_hoisted_8];
+        }),
+        _: 1
+        /* STABLE */
+
+      }, 8
+      /* PROPS */
+      , ["on"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_button, {
+        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
+          'opacity-25': _ctx.teamForm.processing
+        }),
+        disabled: _ctx.teamForm.processing
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [_hoisted_9];
         }),
         _: 1
         /* STABLE */
