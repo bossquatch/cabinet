@@ -128,6 +128,13 @@ class KeyController extends Controller
 
         $key->update($input);
 
+        if ($input['public'])
+        {
+            SharedKey::select('*')
+                ->where('key_id', '=', $key->id)
+                ->delete();
+        }
+
         return back(303);
     }
 
@@ -178,11 +185,7 @@ class KeyController extends Controller
                 ->where('shared_email', '=', $input['shared_email'])
                 ->exists();
 
-            if ($alreadyShared)
-            {
-                // Skip
-            }
-            else
+            if (!$alreadyShared)
             {
                 Validator::make($input, [
                     'key_id' => ['required'],
@@ -209,10 +212,10 @@ class KeyController extends Controller
     public function revoke(Request $request, Key $key, User $user)
     {   
         SharedKey::select('*')
-        ->where('key_id', '=', $key->id)
-        ->where('shared_email', '=', $user->email)
-        ->firstorfail()
-        ->delete();
+            ->where('key_id', '=', $key->id)
+            ->where('shared_email', '=', $user->email)
+            ->firstorfail()
+            ->delete();
 
         return redirect()->route('key.show', ['key' => $key->id]);
     }
@@ -228,13 +231,13 @@ class KeyController extends Controller
         $currentUser = auth()->user();
 
         Key::select('*')
-        ->where('id', '=', $key->id)
-        ->firstorfail()
-        ->delete();
+            ->where('id', '=', $key->id)
+            ->firstorfail()
+            ->delete();
 
         SharedKey::select('*')
-        ->where('key_id', '=', $key->id)
-        ->delete();
+            ->where('key_id', '=', $key->id)
+            ->delete();
 
         return redirect()->route('key.index');
     }
