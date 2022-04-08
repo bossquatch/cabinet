@@ -73,4 +73,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(SharedKey::class);
     }
+
+    public function keyAccessRequests()
+    {
+        return $this->hasMany(KeyAccessRequest::class);
+    }
 }

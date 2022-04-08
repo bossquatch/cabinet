@@ -13,6 +13,7 @@ use App\Http\Controllers\DiskLogController;
 use App\Http\Controllers\DiskDriverFieldController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\KeyController;
+use App\Http\Controllers\KeyAccessRequestController;
 use App\Http\Controllers\Auth\OracleIDCSSocialiteController;
 
 /*
@@ -97,6 +98,30 @@ Route::delete('/key/{key}/{user}', [KeyController::class, 'revoke'])
 Route::delete('/key/{key}', [KeyController::class, 'delete'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('key.delete');
+
+/**
+ * Request routes
+ */
+
+Route::get('/request', [KeyAccessRequestController::class, 'index'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('request.index');
+
+Route::get('/request/create', [KeyAccessRequestController::class, 'create'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('request.create');
+
+Route::post('/request', [KeyAccessRequestController::class, 'store'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('request.store');
+
+Route::delete('/request/{req}', [KeyAccessRequestController::class, 'delete'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('request.delete');
+
+Route::put('/request/{req}', [KeyAccessRequestController::class, 'approveRequest'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('request.approveRequest');
 
 /**
  * Driver routes

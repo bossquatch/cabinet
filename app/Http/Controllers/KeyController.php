@@ -6,12 +6,14 @@ use App\Models\Key;
 use App\Models\SharedKey;
 use App\Models\User;
 use App\Models\Team;
+use App\Models\KeyAccessRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Illuminate\Validation\Rule;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Support\Facades\Crypt;
+use Carbon\Carbon;
 
 class KeyController extends Controller
 {
@@ -23,6 +25,7 @@ class KeyController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $this->adminKeyAccess();
 
         return Inertia::render('Keys/Index', [
             'keys' => $this->allowedKeys()->map(function ($key) {
@@ -36,6 +39,16 @@ class KeyController extends Controller
                 ];
             }),
             'sharedKeys' => $this->allowedSharedKeys()->map(function ($key) {
+                return [
+                    'user_id' => $key->user_id,
+                    'owner_id' => $key->owner_id,
+                    'description' => $key->description,
+                    'value' => Crypt::decryptString($key->value),
+                    'public' => $key->public,
+                    'edit_url' => route('key.show', $key),
+                ];
+            }),
+            'adminAccessedKeys' => $this->allowedAdminAccessedKeys()->map(function ($key) {
                 return [
                     'user_id' => $key->user_id,
                     'owner_id' => $key->owner_id,
@@ -228,8 +241,6 @@ class KeyController extends Controller
      */
     public function delete(Key $key)
     {   
-        $currentUser = auth()->user();
-
         Key::select('*')
             ->where('id', '=', $key->id)
             ->firstorfail()
@@ -250,11 +261,8 @@ class KeyController extends Controller
     private function allowedKeys()
     {
         $user = auth()->user();
-
-        return Key::select('*')
-            ->where('public', '=', true)
-            ->orWhere('user_id', '=', $user->id)
-            ->get();
+        
+        return Key::where('user_id', $user->id)->orWhere('public', true)->get();
     }
 
     /**
@@ -269,6 +277,45 @@ class KeyController extends Controller
         $keys = SharedKey::select('*')->where('shared_email', '=', $user->email)->get();
 
         return Key::whereIn('id', $keys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))->get();
+    }
+
+    /**
+     * Get the admin allowed accessed keys for requested users.
+     *
+     * @return array
+     */
+    private function allowedAdminAccessedKeys()
+    {
+        $user = auth()->user();
+        $requests = KeyAccessRequest::where('admin_id', $user->id)->where('approved', true)->get();
+        $users = User::whereIn('email', $requests->map(function ($request) { return ['user_email' => $request->user_email]; })->pluck('user_email'))->get();
+        
+        return Key::whereIn('owner_id', $users->map(function ($user) { return ['id' => $user->id]; })->pluck('id'))->get();
+    }
+
+    /**
+     * Check if admin access to a user's keys is still available.
+     */
+    private function adminKeyAccess()
+    {
+        $requests = KeyAccessRequest::where('approved', true)->get();
+
+        foreach ($requests as $request)
+        {
+            $approvedTime = Carbon::createFromFormat('Y-m-d H:s:i', KeyAccessRequest::where('id', $request->id)->pluck('approved_at')->first());
+            $currentTime = Carbon::now();
+            $diff_in_hours = $approvedTime->diffInHours($currentTime);
+
+            if ($diff_in_hours > 24)
+            {
+                KeyAccessRequest::select('*')
+                    ->where('id', '=', $request->id)
+                    ->firstorfail()
+                    ->delete();
+            }
+        }
+
+        return;
     }
 
     /**

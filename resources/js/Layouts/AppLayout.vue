@@ -34,6 +34,10 @@
                                     Keys
                                 </jet-nav-link>
 
+                                <jet-nav-link v-if="$page.props.user.is_admin" :href="route('request.index')" :active="route().current('request.index')">
+                                    Key Access Requests
+                                </jet-nav-link>
+
                                 <jet-nav-link v-if="$page.props.user.is_admin" :href="route('disk.index')" :active="route().current('disk.index')">
                                     Edit Disks
                                 </jet-nav-link>
