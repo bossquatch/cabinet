@@ -153,7 +153,7 @@ class KeyAccessRequestController extends Controller
         return function ($validator) use ($email) {
             $validator->errors()->addIf(
                 !$email,
-                'shared_email',
+                'user_email',
                 __('We were unable to find a registered user with this email address.')
             );
         };
@@ -178,7 +178,7 @@ class KeyAccessRequestController extends Controller
         return function ($validator) use ($myEmail) {
             $validator->errors()->addIf(
                 $myEmail,
-                'shared_email',
+                'user_email',
                 __('You already have access to your keys.')
             );
         };
