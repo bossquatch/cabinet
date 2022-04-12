@@ -24,7 +24,6 @@ class KeyController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
         $this->adminKeyAccess();
 
         return Inertia::render('Keys/Index', [
@@ -57,8 +56,7 @@ class KeyController extends Controller
                     'public' => $key->public,
                     'edit_url' => route('key.show', $key),
                 ];
-            }),
-            'myID' => $user->id,
+            })
         ]);
     }
 

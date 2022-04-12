@@ -51,7 +51,7 @@
                                                         {{ request.purpose }}
                                                     </td>
                                                     <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                                        <jet-danger-button v-if="myID == request.admin_id" @click="deleteConfirmation(request)">
+                                                        <jet-danger-button v-if="$page.props.user.id == request.admin_id" @click="deleteConfirmation(request)">
                                                             Delete
                                                         </jet-danger-button>
                                                         <jet-button v-else-if="!request.approved" @click="approveConfirmation(request)" class="inline-flex items-center text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
@@ -136,7 +136,7 @@
     import JetDangerButton from '@/Jetstream/DangerButton.vue'
 
     export default defineComponent({
-        props: ['requests', 'myID'],
+        props: ['requests'],
 
         components: {
             AppLayout,

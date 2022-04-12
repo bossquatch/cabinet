@@ -23,7 +23,6 @@ class KeyAccessRequestController extends Controller
      */
     public function index()
     {
-        $currentUser = auth()->user();
         $this->adminKeyAccess();
 
         return Inertia::render('Requests/Index', [
@@ -39,8 +38,7 @@ class KeyAccessRequestController extends Controller
                     'purpose' => $req->purpose,
                     'approved' => $req->approved
                 ];
-            }),
-            'myID' => $currentUser->id
+            })
         ]);
     }
 
