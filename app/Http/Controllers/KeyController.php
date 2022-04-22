@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Key;
 use App\Models\SharedKey;
 use App\Models\User;
+use App\Models\Team;
+use App\Models\KeyAccessRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Illuminate\Validation\Rule;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Support\Facades\Crypt;
+use Carbon\Carbon;
 
 class KeyController extends Controller
 {
@@ -21,7 +24,7 @@ class KeyController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
+        $this->adminKeyAccess();
 
         return Inertia::render('Keys/Index', [
             'keys' => $this->allowedKeys()->map(function ($key) {
@@ -44,7 +47,16 @@ class KeyController extends Controller
                     'edit_url' => route('key.show', $key),
                 ];
             }),
-            'myID' => $user->id,
+            'adminAccessedKeys' => $this->allowedAdminAccessedKeys()->map(function ($key) {
+                return [
+                    'user_id' => $key->user_id,
+                    'owner_id' => $key->owner_id,
+                    'description' => $key->description,
+                    'value' => Crypt::decryptString($key->value),
+                    'public' => $key->public,
+                    'edit_url' => route('key.show', $key),
+                ];
+            })
         ]);
     }
 
@@ -71,8 +83,8 @@ class KeyController extends Controller
         Validator::make($input, [
             'user_id' => ['required'],
             'owner_id' => ['required'],
-            'description' => ['required', 'string', 'max:100'],
-            'value' => ['required', 'string', 'max:50'],
+            'description' => ['required', 'string', 'max:255'],
+            'value' => ['required', 'string', 'max:512'],
             'public' => ['required', 'boolean'],
         ])->validateWithBag('createKey');
 
@@ -118,14 +130,21 @@ class KeyController extends Controller
         $input = $request->all();
 
         Validator::make($input, [
-            'description' => ['required', 'string', 'max:100'],
-            'value' => ['required', 'string', 'max:50'],
+            'description' => ['required', 'string', 'max:255'],
+            'value' => ['required', 'string', 'max:512'],
             'public' => ['required', 'boolean'],
         ])->validateWithBag('updateKey');
         
         $input['value'] = Crypt::encryptString($input['value']);
 
         $key->update($input);
+
+        if ($input['public'])
+        {
+            SharedKey::select('*')
+                ->where('key_id', '=', $key->id)
+                ->delete();
+        }
 
         return back(303);
     }
@@ -136,24 +155,61 @@ class KeyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function share(Request $request)
+    public function userShare(Request $request)
     {
         $input = $request->all();
-
+        
         Validator::make($input, [
             'key_id' => ['required'],
-            'shared_email' => ['required', 'string', 'max:100'],
+            'shared_email' => ['required', 'string', 'max:255'],
         ])->after(
             $this->ensureEmailExists($input)
         )->after(
             $this->ensureEmailNotCurrentUser($input)
         )->after(
             $this->ensureKeyNotAlreadyShared($input)
-        )->validateWithBag('shareKey');
+        )->validateWithBag('shareUserKey');
 
         $sharedKey = SharedKey::create($input);
 
         return redirect()->route('key.show', ['key' => $sharedKey->key_id]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param \App\Models\Team $team
+     * @return \Illuminate\Http\Response
+     */
+    public function teamShare(Request $request, Team $team)
+    {
+        $input = $request->all();
+        
+        foreach ($team->users as $user)
+        {
+            $userInfo = User::where('id', $user->id)->firstorfail();
+            $input['shared_email'] = $userInfo->email;
+            
+            $alreadyShared = SharedKey::select('*')
+                ->where('key_id', '=', $input['key_id'])
+                ->where('shared_email', '=', $input['shared_email'])
+                ->exists();
+
+            if (!$alreadyShared)
+            {
+                Validator::make($input, [
+                    'key_id' => ['required'],
+                    'shared_email' => ['required', 'string', 'max:255'],
+                ])->after(
+                    $this->ensureKeyNotAlreadyShared($input)
+                )->validateWithBag('shareTeamKey');
+        
+                SharedKey::create($input);
+            }
+        }
+
+        return redirect()->route('key.show', ['key' => $input['key_id']]);
     }
 
     /**
@@ -164,7 +220,7 @@ class KeyController extends Controller
      * @param \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, Key $key, User $user)
+    public function revoke(Request $request, Key $key, User $user)
     {   
         SharedKey::select('*')
             ->where('key_id', '=', $key->id)
@@ -176,6 +232,26 @@ class KeyController extends Controller
     }
 
     /**
+     * Remove a resource in storage.
+     *
+     * @param \App\Models\Key $key
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Key $key)
+    {   
+        Key::select('*')
+            ->where('id', '=', $key->id)
+            ->firstorfail()
+            ->delete();
+
+        SharedKey::select('*')
+            ->where('key_id', '=', $key->id)
+            ->delete();
+
+        return redirect()->route('key.index');
+    }
+
+    /**
      * Get the allowed personal and public keys for the user.
      *
      * @return array
@@ -183,11 +259,8 @@ class KeyController extends Controller
     private function allowedKeys()
     {
         $user = auth()->user();
-
-        return Key::select('*')
-            ->where('public', '=', true)
-            ->orWhere('user_id', '=', $user->id)
-            ->get();
+        
+        return Key::where('user_id', $user->id)->orWhere('public', true)->get();
     }
 
     /**
@@ -202,6 +275,45 @@ class KeyController extends Controller
         $keys = SharedKey::select('*')->where('shared_email', '=', $user->email)->get();
 
         return Key::whereIn('id', $keys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))->get();
+    }
+
+    /**
+     * Get the admin allowed accessed keys for requested users.
+     *
+     * @return array
+     */
+    private function allowedAdminAccessedKeys()
+    {
+        $user = auth()->user();
+        $requests = KeyAccessRequest::where('admin_id', $user->id)->where('approved', true)->get();
+        $users = User::whereIn('email', $requests->map(function ($request) { return ['user_email' => $request->user_email]; })->pluck('user_email'))->get();
+        
+        return Key::whereIn('owner_id', $users->map(function ($user) { return ['id' => $user->id]; })->pluck('id'))->get();
+    }
+
+    /**
+     * Check if admin access to a user's keys is still available.
+     */
+    private function adminKeyAccess()
+    {
+        $requests = KeyAccessRequest::where('approved', true)->get();
+
+        foreach ($requests as $request)
+        {
+            $approvedTime = Carbon::createFromFormat('Y-m-d H:s:i', KeyAccessRequest::where('id', $request->id)->pluck('approved_at')->first());
+            $currentTime = Carbon::now();
+            $diff_in_hours = $approvedTime->diffInHours($currentTime);
+
+            if ($diff_in_hours > 24)
+            {
+                KeyAccessRequest::select('*')
+                    ->where('id', '=', $request->id)
+                    ->firstorfail()
+                    ->delete();
+            }
+        }
+
+        return;
     }
 
     /**
@@ -268,28 +380,6 @@ class KeyController extends Controller
                 $shared_key,
                 'shared_email',
                 __('This user already shares this key.')
-            );
-        };
-    }
-
-    /**
-     * Ensure that the key exists.
-     *
-     * @param  mixed  $input
-     * @return \Closure
-     */
-    protected function ensureKeyExists(mixed $input)
-    {
-        $shared_key = SharedKey::select('*')
-            ->where('key_id', '=', $input['key_id'])
-            ->where('shared_email', '=', $input['shared_email'])
-            ->exists();
-
-        return function ($validator) use ($shared_key) {
-            $validator->errors()->addIf(
-                !$shared_key,
-                'shared_email',
-                __('This key is not shared with this user.')
             );
         };
     }

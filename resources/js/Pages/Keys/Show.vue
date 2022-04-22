@@ -13,6 +13,8 @@
                 <share-key-form v-if="skey.public == false" :skey="skey" />
 
                 <revoke-key-form v-if="skey.public == false" :skey="skey" :shared_users="shared_users" />
+
+                <delete-key-form :skey="skey" />
             </div>
         </div>
     </app-layout>
@@ -25,6 +27,7 @@
     import UpdateKeyForm from '@/Pages/Keys/Partials/UpdateKeyForm.vue'
     import ShareKeyForm from '@/Pages/Keys/Partials/ShareKeyForm.vue'
     import RevokeKeyForm from '@/Pages/Keys/Partials/RevokeKeyForm.vue'
+    import DeleteKeyForm from '@/Pages/Keys/Partials/DeleteKeyForm.vue'
 
     export default defineComponent({
         props: ['skey', 'shared_users'],
@@ -35,6 +38,7 @@
             UpdateKeyForm,
             ShareKeyForm,
             RevokeKeyForm,
+            DeleteKeyForm,
         },
     })
 </script>
