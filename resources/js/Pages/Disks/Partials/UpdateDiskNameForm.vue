@@ -85,7 +85,7 @@
             CustomSelect,
         },
 
-        props: ['disk', 'backup_disks'],
+        props: ['disk', 'backup_disks', 'templates'],
 
         data() {
             return {

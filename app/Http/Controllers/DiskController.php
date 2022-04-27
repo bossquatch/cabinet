@@ -28,6 +28,14 @@ class DiskController extends Controller
                     'edit_url' => route('disk.show', $disk),
                 ];
             }),
+            'templates' => $this->allowedDisks(true)->map(function ($disk) {
+                return [
+                    'id' => $disk->id,
+                    'name' => $disk->name,
+                    'team' => $disk->team->name,
+                    'edit_url' => route('disk.show', $disk),
+                ];
+            }),
             //'create_url' => URL::route('users.create'),
         ]);
     }
@@ -47,6 +55,12 @@ class DiskController extends Controller
                 ];
             }),
             'backup_disks' => $this->allowedDisks()->map(function ($disk) {
+                return [
+                    'id' => $disk->id,
+                    'name' => $disk->name,
+                ];
+            }),
+            'templates' => $this->allowedDisks(true)->map(function ($disk) {
                 return [
                     'id' => $disk->id,
                     'name' => $disk->name,
@@ -102,7 +116,13 @@ class DiskController extends Controller
                     'value' => $driverField ? ($field->encrypt ? \Illuminate\Support\Facades\Crypt::decryptString($driverField->value) : $driverField->value) : null,
                 ];
             }),
-            'backup_disks' => Disk::where('id', '!=', $disk->id)->whereIn('team_id', auth()->user()->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get()->map(function ($disk) {
+            'backup_disks' => Disk::where('is_template', false)->where('id', '!=', $disk->id)->whereIn('team_id', auth()->user()->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get()->map(function ($disk) {
+                return [
+                    'id' => $disk->id,
+                    'name' => $disk->name,
+                ];
+            }),
+            'templates' => Disk::where('is_template', true)->where('id', '!=', $disk->id)->whereIn('team_id', auth()->user()->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get()->map(function ($disk) {
                 return [
                     'id' => $disk->id,
                     'name' => $disk->name,
@@ -211,12 +231,12 @@ class DiskController extends Controller
         }
     }
 
-    private function allowedDisks()
+    private function allowedDisks($is_template = false)
     {
         $user = auth()->user();
 
         return $user->is_admin ?
-            Disk::all() :
-            Disk::whereIn('team_id', $user->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get();
+            Disk::where('is_template', $is_template)->get() :
+            Disk::where('is_template', $is_template)->whereIn('team_id', $user->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get();
     }
 }
