@@ -6,7 +6,7 @@
             </div>
 
             <div class="mt-6 text-gray-500">
-                The Polk County Cabinet provides an elegant, versatile way to secureley transfer files to other teams within the organization.
+                The Polk County Cabinet provides an elegant, versatile way to securely transfer files to other teams within the organization.
             </div>
 
             <div class="mt-4">
