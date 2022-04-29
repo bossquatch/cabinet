@@ -28,6 +28,16 @@ class Disk extends Model
         return $this->belongsTo(Driver::class);
     }
 
+    public function template()
+    {
+        return $this->belongsTo(Disk::class, 'template_id');
+    }
+
+    public function templatedDisks()
+    {
+        return $this->hasMany(Disk::class, 'template_id');
+    }
+
     public function diskDriverFields()
     {
         return $this->hasMany(DiskDriverField::class);
@@ -167,11 +177,13 @@ class Disk extends Model
 
     private function buildOptions()
     {
+        $template = $this->template;
         $options = [
             'driver' => $this->driver->name,
         ];
         foreach ($this->driver->driverFields as $field) {
-            $filledField = $this->diskDriverFields->where('driver_field_id', $field->id)->first();
+            // If template exists and contains that field, use it; otherwise use own field
+            $filledField = $template?->diskDriverFields->where('driver_field_id', $field->id)->first() ?? $this->diskDriverFields->where('driver_field_id', $field->id)->first();
             if ($filledField) {
                 if ($field->is_file) {
                     $options[$field->name] = storage_path('app') . '/' . $filledField->value;

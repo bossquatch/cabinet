@@ -20884,6 +20884,7 @@ __webpack_require__.r(__webpack_exports__);
         backup_id: null,
         template_id: null,
         "private": 0,
+        is_template: 0,
         team_id: this.$page.props.user.current_team_id,
         encode_files: 1
       })
@@ -21085,16 +21086,25 @@ __webpack_require__.r(__webpack_exports__);
       form: this.$inertia.form({
         name: this.disk.name,
         "private": this.disk["private"],
+        is_template: this.disk.is_template,
         encode_files: this.disk.encode_files,
-        backup_id: this.disk.backup_id
+        backup_id: this.disk.backup_id,
+        template_id: this.disk.template_id
       })
     };
   },
   methods: {
     updateDiskName: function updateDiskName() {
+      var _this = this;
+
       this.form.put(route('disk.update', this.disk), {
         errorBag: 'updateDiskName',
-        preserveScroll: true
+        preserveScroll: true,
+        onSuccess: function onSuccess() {
+          _this.form.clearErrors();
+
+          _this.$inertia.reload();
+        }
       });
     }
   }
@@ -21130,6 +21140,27 @@ __webpack_require__.r(__webpack_exports__);
     JetSectionBorder: _Jetstream_SectionBorder_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     DiskFieldManager: _Pages_Disks_Partials_DiskFieldManager_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     UpdateDiskNameForm: _Pages_Disks_Partials_UpdateDiskNameForm_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
+  computed: {
+    fields: function fields() {
+      var templatedIds = [];
+      var fields = [];
+
+      if (this.disk.template !== null) {
+        if (this.disk.template.disk_driver_fields !== null) {
+          this.disk.template.disk_driver_fields.forEach(function (value) {
+            templatedIds.push(value.driver_field_id);
+          });
+        }
+      }
+
+      this.driverFields.forEach(function (value, index) {
+        if (!templatedIds.includes(value.id)) {
+          fields.push(value);
+        }
+      });
+      return fields;
+    }
   }
 }));
 
@@ -27481,7 +27512,7 @@ var _hoisted_7 = {
 
 var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
   value: ""
-}, "No backup disk", -1
+}, "No template", -1
 /* HOISTED */
 );
 
@@ -27590,7 +27621,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* PROPS */
       , ["message"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_label, {
         "for": "template",
-        value: "Backup Disk"
+        value: "Template"
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_select, {
         id: "template",
         modelValue: _ctx.form.template_id,
@@ -27655,9 +27686,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, null, 8
       /* PROPS */
       , ["message"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_checkbox, {
+        name: 'Is Template',
+        modelValue: _ctx.form.is_template,
+        "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+          return _ctx.form.is_template = $event;
+        })
+      }, null, 8
+      /* PROPS */
+      , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_checkbox, {
         name: 'Private*',
         modelValue: _ctx.form["private"],
-        "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+        "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
           return _ctx.form["private"] = $event;
         })
       }, null, 8
@@ -27665,7 +27704,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_checkbox, {
         name: 'Encode Files',
         modelValue: _ctx.form.encode_files,
-        "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
+        "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
           return _ctx.form.encode_files = $event;
         })
       }, null, 8
@@ -28005,7 +28044,7 @@ var _hoisted_5 = {
 
 var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
   value: ""
-}, "No backup disk", -1
+}, "No template", -1
 /* HOISTED */
 );
 
@@ -28014,7 +28053,18 @@ var _hoisted_8 = {
   "class": "col-span-6 sm:col-span-4"
 };
 
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+  value: ""
+}, "No backup disk", -1
+/* HOISTED */
+);
+
+var _hoisted_10 = ["selected", "value"];
+var _hoisted_11 = {
+  "class": "col-span-6 sm:col-span-4"
+};
+
+var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "col-span-6 lg:col-span-4"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "max-w-xl text-xs text-gray-600"
@@ -28022,9 +28072,9 @@ var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Saved. ");
+var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Saved. ");
 
-var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Save ");
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Save ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_jet_label = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("jet-label");
@@ -28092,25 +28142,58 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, null, 8
       /* PROPS */
       , ["message"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_label, {
+        "for": "template",
+        value: "Template"
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_select, {
+        id: "template",
+        modelValue: _ctx.form.template_id,
+        "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+          return _ctx.form.template_id = $event;
+        }),
+        "class": "md:w-1/2"
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [_hoisted_6, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.templates, function (template) {
+            return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
+              key: template.id,
+              selected: template.id == _ctx.form.template_id,
+              value: template.id
+            }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(template.name), 9
+            /* TEXT, PROPS */
+            , _hoisted_7);
+          }), 128
+          /* KEYED_FRAGMENT */
+          ))];
+        }),
+        _: 1
+        /* STABLE */
+
+      }, 8
+      /* PROPS */
+      , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_input_error, {
+        message: _ctx.form.errors.template_id
+      }, null, 8
+      /* PROPS */
+      , ["message"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_label, {
         "for": "backup_disk",
         value: "Backup Disk"
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_select, {
         id: "backup_disk",
         modelValue: _ctx.form.backup_id,
-        "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+        "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
           return _ctx.form.backup_id = $event;
         }),
         "class": "md:w-1/2"
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_6, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.backup_disks, function (backup_disk) {
+          return [_hoisted_9, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.backup_disks, function (backup_disk) {
             return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
               key: backup_disk.id,
               selected: backup_disk.id == _ctx.form.backup_id,
               value: backup_disk.id
             }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(backup_disk.name), 9
             /* TEXT, PROPS */
-            , _hoisted_7);
+            , _hoisted_10);
           }), 128
           /* KEYED_FRAGMENT */
           ))];
@@ -28124,10 +28207,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         message: _ctx.form.errors.backup_id
       }, null, 8
       /* PROPS */
-      , ["message"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_checkbox, {
+      , ["message"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_checkbox, {
+        name: 'Is Template',
+        modelValue: _ctx.form.is_template,
+        "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+          return _ctx.form.is_template = $event;
+        })
+      }, null, 8
+      /* PROPS */
+      , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_checkbox, {
         name: 'Private*',
         modelValue: _ctx.form["private"],
-        "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+        "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
           return _ctx.form["private"] = $event;
         })
       }, null, 8
@@ -28135,12 +28226,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_checkbox, {
         name: 'Encode Files',
         modelValue: _ctx.form.encode_files,
-        "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+        "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
           return _ctx.form.encode_files = $event;
         })
       }, null, 8
       /* PROPS */
-      , ["modelValue"])]), _hoisted_9];
+      , ["modelValue"])]), _hoisted_12];
     }),
     actions: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_action_message, {
@@ -28148,7 +28239,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         "class": "mr-3"
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_10];
+          return [_hoisted_13];
         }),
         _: 1
         /* STABLE */
@@ -28162,7 +28253,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         disabled: _ctx.form.processing
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_11];
+          return [_hoisted_14];
         }),
         _: 1
         /* STABLE */
@@ -28227,7 +28318,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       , ["disk", "backup_disks", "templates"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_disk_field_manager, {
         "class": "mt-10 sm:mt-0",
         disk: _ctx.disk,
-        fields: _ctx.driverFields
+        fields: _ctx.fields
       }, null, 8
       /* PROPS */
       , ["disk", "fields"])])])];

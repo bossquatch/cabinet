@@ -30,6 +30,15 @@
             </div>
 
             <div class="col-span-6 sm:col-span-4">
+                <jet-label for="template" value="Template" />
+                <custom-select id="template" v-model="form.template_id" class="md:w-1/2">
+                    <option value="">No template</option>
+                    <option v-for="template in templates" :key="template.id" :selected="template.id == form.template_id" :value="template.id">{{ template.name }}</option>
+                </custom-select>
+                <jet-input-error :message="form.errors.template_id" />
+            </div>
+
+            <div class="col-span-6 sm:col-span-4">
                 <jet-label for="backup_disk" value="Backup Disk" />
                 <custom-select id="backup_disk" v-model="form.backup_id" class="md:w-1/2">
                     <option value="">No backup disk</option>
@@ -39,6 +48,7 @@
             </div>
 
             <div class="col-span-6 sm:col-span-4">
+                <custom-checkbox :name="'Is Template'" v-model="form.is_template" />
                 <custom-checkbox :name="'Private*'" v-model="form.private" />
                 <custom-checkbox :name="'Encode Files'" v-model="form.encode_files" />
             </div>
@@ -92,8 +102,10 @@
                 form: this.$inertia.form({
                     name: this.disk.name,
                     private: this.disk.private,
+                    is_template: this.disk.is_template,
                     encode_files: this.disk.encode_files,
                     backup_id: this.disk.backup_id,
+                    template_id: this.disk.template_id,
                 })
             }
         },
@@ -102,7 +114,11 @@
             updateDiskName() {
                 this.form.put(route('disk.update', this.disk), {
                     errorBag: 'updateDiskName',
-                    preserveScroll: true
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        this.form.clearErrors()
+                        this.$inertia.reload()
+                    },
                 });
             },
         },

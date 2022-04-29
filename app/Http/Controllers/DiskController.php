@@ -85,6 +85,8 @@ class DiskController extends Controller
             'driver_id' => ['required', 'integer'],
             'team_id' => ['required', Rule::in($team_ids)],
             'backup_id' => ['nullable', 'integer'],
+            'template_id' => ['nullable', 'integer'],
+            'is_template' => ['required', 'boolean'],
             'private' => ['required', 'boolean'],
             'encode_files' => ['required', 'boolean'],
         ])->validateWithBag('createDisk');
@@ -103,7 +105,7 @@ class DiskController extends Controller
     public function show(Disk $disk)
     {
         return Inertia::render('Disks/Show', [
-            'disk' => $disk->load('driver'),
+            'disk' => $disk->load('driver', 'template', 'template.diskDriverFields'),
             'driverFields' => $disk->driver->driverFields->map(function ($field) use ($disk) {
                 $driverField = $disk->diskDriverFields()->where('driver_field_id', $field->id)->first();
                 return [
@@ -157,6 +159,8 @@ class DiskController extends Controller
             'name' => ['required', 'string', 'max:60'],
             'private' => ['required', 'boolean'],
             'backup_id' => ['nullable', 'integer'],
+            'template_id' => ['nullable', 'integer'],
+            'is_template' => ['required', 'boolean'],
         ])->validateWithBag('updateDiskName');
         
         $disk->update($input);
