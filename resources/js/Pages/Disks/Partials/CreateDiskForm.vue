@@ -25,6 +25,15 @@
             </div>
 
             <div class="col-span-6 sm:col-span-4">
+                <jet-label for="template" value="Template" />
+                <custom-select id="template" v-model="form.template_id" class="md:w-1/2">
+                    <option value="">No template</option>
+                    <option v-for="template in templates" :key="template.id" :selected="template.id == form.template_id" :value="template.id">{{ template.name }}</option>
+                </custom-select>
+                <jet-input-error :message="form.errors.template_id" />
+            </div>
+
+            <div class="col-span-6 sm:col-span-4">
                 <jet-label for="backup_disk" value="Backup Disk" />
                 <custom-select id="backup_disk" v-model="form.backup_id" class="md:w-1/2">
                     <option value="">No backup disk</option>
@@ -34,6 +43,7 @@
             </div>
 
             <div class="col-span-6 sm:col-span-4">
+                <custom-checkbox :name="'Is Template'" v-model="form.is_template" />
                 <custom-checkbox :name="'Private*'" v-model="form.private" />
                 <custom-checkbox :name="'Encode Files'" v-model="form.encode_files" />
             </div>
@@ -64,7 +74,7 @@
     import CustomSelect from '@/BuildingBlocks/Select.vue'
 
     export default defineComponent({
-        props: ['drivers', 'backup_disks'],
+        props: ['drivers', 'backup_disks', 'templates'],
 
         components: {
             JetButton,
@@ -82,7 +92,9 @@
                     name: '',
                     driver_id: null,
                     backup_id: null,
+                    template_id: null,
                     private: 0,
+                    is_template: 0,
                     team_id: this.$page.props.user.current_team_id,
                     encode_files: 1,
                 })

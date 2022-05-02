@@ -50,29 +50,41 @@ class DiskDriverFieldController extends Controller
 
         Validator::make($input, $validation['rules'], $validation['messages'])->validateWithBag('updateDiskField');
 
-        //dd('all validated');
+        $filled = [];
+
         foreach ($input as $index => $value) {
             $field_id = Str::replace('field_', '', $index);
             $driverField = $fields->where('id', $field_id)->first();
 
-            if ($driverField->is_file) {
-                if ($request->hasFile($index)) {
-                    $file = $request->file($index);
-                    $newFileName = 'file-' . $field_id . '.' . $file->getClientOriginalExtension();
-                    $path = $file->storeAs('/'.($disk->id),$newFileName,'local');
+            $filled[] = (int) $field_id;
 
+            if ($value !== null) {
+                if ($driverField->is_file) {
+                    if ($request->hasFile($index)) {
+                        $file = $request->file($index);
+                        $newFileName = 'file-' . $field_id . '.' . $file->getClientOriginalExtension();
+                        $path = $file->storeAs('/'.($disk->id),$newFileName,'local');
+
+                        DiskDriverField::updateOrCreate(
+                            ['driver_field_id' => $field_id, 'disk_id' => $disk->id],
+                            ['value' => $path]
+                        );
+                    }
+                } else {   
                     DiskDriverField::updateOrCreate(
                         ['driver_field_id' => $field_id, 'disk_id' => $disk->id],
-                        ['value' => $path]
+                        ['value' => $driverField->encrypt ? \Illuminate\Support\Facades\Crypt::encryptString($value) : $value]
                     );
                 }
-            } else {   
-                DiskDriverField::updateOrCreate(
-                    ['driver_field_id' => $field_id, 'disk_id' => $disk->id],
-                    ['value' => $driverField->encrypt ? \Illuminate\Support\Facades\Crypt::encryptString($value) : $value]
-                );
-            } 
+            } else {
+                DiskDriverField::where([
+                    ['driver_field_id', '=', $field_id], 
+                    ['disk_id', '=', $disk->id]
+                ])->delete();
+            }
         }
+
+        DiskDriverField::where('disk_id', $disk->id)->whereIn('driver_field_id',array_diff($fields->pluck('id')->toArray(),$filled))->delete();
 
         return back(303);
     }
@@ -136,17 +148,23 @@ class DiskDriverFieldController extends Controller
             'messages' => [],
         ];
 
+        $template = $disk->template;
+
         foreach($driverFields as $field)
         {
             $rules = [];
 
-            if ($field->required && !$field->is_file) {
-                $rules[] = 'required';
-                $return['messages']['field_' . $field->id . '.required'] = $field->display_name . ' is required.';
-            } else if ($field->required && $field->is_file) {
-                $rules[] = Rule::requiredIf($disk->diskDriverFields()->where('driver_field_id', $field->id)->doesntExist());
-                $rules[] = 'nullable';
-                $return['messages']['field_' . $field->id . '.required'] = $field->display_name . ' is required.';
+            if (!$disk->is_template && (!$template || $template->diskDriverFields()->where('driver_field_id', $field->id)->doesntExist())) {
+                if ($field->required && !$field->is_file) {
+                    $rules[] = 'required';
+                    $return['messages']['field_' . $field->id . '.required'] = $field->display_name . ' is required.';
+                } else if ($field->required && $field->is_file) {
+                    $rules[] = Rule::requiredIf($disk->diskDriverFields()->where('driver_field_id', $field->id)->doesntExist());
+                    $rules[] = 'nullable';
+                    $return['messages']['field_' . $field->id . '.required'] = $field->display_name . ' is required.';
+                } else {
+                    $rules[] = 'nullable';
+                } 
             } else {
                 $rules[] = 'nullable';
             }
