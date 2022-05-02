@@ -17,7 +17,10 @@
 
             <div class="col-span-6 sm:col-span-4">
                 <jet-label for="value" value="Value" />
-                <jet-input id="value" type="text" class="block w-full mt-1" v-model="form.value" autofocus/>
+                <div class="flex">
+                    <jet-input id="value" type="text" class="block w-full mt-1" v-model="form.value" autofocus/>
+                    <jet-button type="button" @click="generatePassword" class="ml-2">Generate Password</jet-button>
+                </div>
                 <jet-input-error :message="form.errors.value" class="mt-2" />
             </div>
 
@@ -100,6 +103,19 @@
         },
 
         methods: {
+            generatePassword() {
+                let password = ""
+                let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+                let passwordLength = Math.floor(Math.random() * 225)
+
+                for (let i = 0; i < passwordLength; i++)
+                {
+                    password += characters.charAt(Math.floor(Math.random() * characters.length))
+                }
+
+                this.form.value = password
+            },
+
             checkPublic() {
                 if (this.form.public)
                 {
