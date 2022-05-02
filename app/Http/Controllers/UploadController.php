@@ -12,8 +12,11 @@ class UploadController extends Controller
     public function index()
     {
         return Inertia::render('Upload/Index', [
-            'disks' => Disk::whereIn('team_id', auth()->user()->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))
-                            ->orWhere('private', false)
+            'disks' => Disk::where('is_template', false)
+                            ->where(function ($query) {
+                                $query->whereIn('team_id', auth()->user()->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))
+                                    ->orWhere('private', false);
+                            })
                             ->get()
                             ->map(function ($disk) {
                                 return [
