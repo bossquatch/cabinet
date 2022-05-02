@@ -45,9 +45,11 @@
                                                     <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                                         {{ key.description }}
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                        {{ key.value }}
-                                                        <button class="ml-4 text-blue-600" @click="copy(key.value)">Copy</button>
+                                                    <td class="flex px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                        <div class="blur-sm">
+                                                            {{ key.value }}
+                                                        </div>
+                                                        <button class="ml-3 text-blue-600" @click="copy(key.value)">Copy</button>
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                         {{ key.public ? "Yes" : "No" }}
@@ -62,8 +64,10 @@
                                                     <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                                         {{ key.description }}
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                        {{ key.value }}
+                                                    <td class="flex px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                        <div class="blur-sm">
+                                                            {{ key.value }}
+                                                        </div>
                                                         <button class="ml-4 text-blue-600" @click="copy(key.value)">Copy</button>
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
@@ -115,8 +119,10 @@
                                                     <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                                         {{ key.description }}
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                        {{ key.value }}
+                                                    <td class="flex px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                        <div class="blur-sm">
+                                                            {{ key.value }}
+                                                        </div>
                                                         <button class="ml-4 text-blue-600" @click="copy(key.value)">Copy</button>
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
@@ -151,6 +157,7 @@
     import AppLayout from '@/Layouts/AppLayout.vue'
     import JetSectionBorder from '@/Jetstream/SectionBorder'
     import CustomNavLink from '@/BuildingBlocks/NavLink'
+    import JetActionMessage from '@/Jetstream/ActionMessage'
 
     export default defineComponent({
         props: ['keys', 'sharedKeys', 'adminAccessedKeys'],
@@ -159,6 +166,7 @@
             AppLayout,
             CustomNavLink,
             JetSectionBorder,
+            JetActionMessage,
         },
 
         methods: {
