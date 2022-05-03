@@ -49,13 +49,15 @@
                                                         <div class="blur-sm">
                                                             {{ key.value }}
                                                         </div>
-                                                        <button class="ml-3 text-blue-600" @click="copy(key.value)">Copy</button>
+                                                        <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"/>
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                         {{ key.public ? "Yes" : "No" }}
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                                        <custom-nav-link v-if="$page.props.user.id == key.owner_id" :href="key.edit_url" class="text-indigo-600 hover:text-indigo-900">Edit</custom-nav-link>
+                                                    <td class="flex px-6 py-4 text-sm font-medium text-right place-content-end whitespace-nowrap">
+                                                        <custom-nav-link v-if="$page.props.user.id == key.owner_id" :href="key.edit_url" class="text-indigo-600 hover:text-indigo-900">
+                                                            <edit-icon />
+                                                        </custom-nav-link>
                                                     </td>
                                                 </tr>
                                             </template>
@@ -68,13 +70,15 @@
                                                         <div class="blur-sm">
                                                             {{ key.value }}
                                                         </div>
-                                                        <button class="ml-4 text-blue-600" @click="copy(key.value)">Copy</button>
+                                                        <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"></clipboard-copy-icon>
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                         {{ key.public ? "Yes" : "No" }}
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                                        <custom-nav-link v-if="$page.props.user.id == key.owner_id" :href="key.edit_url" class="text-indigo-600 hover:text-indigo-900">Edit</custom-nav-link>
+                                                    <td class="px-6 py-4 text-sm font-medium text-right place-conent-end whitespace-nowrap">
+                                                        <custom-nav-link v-if="$page.props.user.id == key.owner_id" :href="key.edit_url" class="text-indigo-600 hover:text-indigo-900">
+                                                            <edit-icon />
+                                                        </custom-nav-link>
                                                     </td>
                                                 </tr>
                                             </template>
@@ -123,13 +127,15 @@
                                                         <div class="blur-sm">
                                                             {{ key.value }}
                                                         </div>
-                                                        <button class="ml-4 text-blue-600" @click="copy(key.value)">Copy</button>
+                                                        <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"></clipboard-copy-icon>
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                         {{ key.public ? "Yes" : "No" }}
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                                        <custom-nav-link :href="key.edit_url" class="text-indigo-600 hover:text-indigo-900">Edit</custom-nav-link>
+                                                    <td class="flex px-6 py-4 text-sm font-medium text-right place-content-end whitespace-nowrap">
+                                                        <custom-nav-link :href="key.edit_url" class="text-indigo-600 hover:text-indigo-900">
+                                                            <edit-icon />
+                                                        </custom-nav-link>
                                                     </td>
                                                 </tr>
                                             </template>
@@ -158,6 +164,8 @@
     import JetSectionBorder from '@/Jetstream/SectionBorder'
     import CustomNavLink from '@/BuildingBlocks/NavLink'
     import JetActionMessage from '@/Jetstream/ActionMessage'
+    import ClipboardCopyIcon from '@/HeroIcons/ClipboardCopy.vue'
+    import EditIcon from '@/HeroIcons/Edit.vue'
 
     export default defineComponent({
         props: ['keys', 'sharedKeys', 'adminAccessedKeys'],
@@ -167,6 +175,8 @@
             CustomNavLink,
             JetSectionBorder,
             JetActionMessage,
+            ClipboardCopyIcon,
+            EditIcon
         },
 
         methods: {
