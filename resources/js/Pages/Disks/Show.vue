@@ -8,9 +8,9 @@
 
         <div>
             <div class="py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <update-disk-name-form :disk="disk" :backup_disks="backup_disks" />
+                <update-disk-name-form :disk="disk" :backup_disks="backup_disks" :templates="templates" />
 
-                <disk-field-manager class="mt-10 sm:mt-0" :disk="disk" :fields="driverFields" />
+                <disk-field-manager class="mt-10 sm:mt-0" :disk="disk" :fields="fields" />
             </div>
         </div>
     </app-layout>
@@ -28,6 +28,7 @@
             'disk',
             'driverFields',
             'backup_disks',
+            'templates',
         ],
 
         components: {
@@ -36,5 +37,27 @@
             DiskFieldManager,
             UpdateDiskNameForm,
         },
+
+        computed: {
+            fields() {
+                let templatedIds = []
+                let fields = []
+                if (this.disk.template !== null) {
+                    if (this.disk.template.disk_driver_fields !== null) {
+                        this.disk.template.disk_driver_fields.forEach((value) => {
+                            templatedIds.push(value.driver_field_id)
+                        })
+                    }
+                }
+
+                this.driverFields.forEach((value, index) => {
+                    if (!templatedIds.includes(value.id)) {
+                        fields.push(value)
+                    }
+                });
+
+                return fields
+            }
+        }
     })
 </script>

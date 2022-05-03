@@ -28,6 +28,14 @@ class DiskController extends Controller
                     'edit_url' => route('disk.show', $disk),
                 ];
             }),
+            'templates' => $this->allowedDisks(true)->map(function ($disk) {
+                return [
+                    'id' => $disk->id,
+                    'name' => $disk->name,
+                    'team' => $disk->team->name,
+                    'edit_url' => route('disk.show', $disk),
+                ];
+            }),
             //'create_url' => URL::route('users.create'),
         ]);
     }
@@ -52,6 +60,12 @@ class DiskController extends Controller
                     'name' => $disk->name,
                 ];
             }),
+            'templates' => $this->allowedDisks(true)->map(function ($disk) {
+                return [
+                    'id' => $disk->id,
+                    'name' => $disk->name,
+                ];
+            }),
         ]);
     }
 
@@ -71,6 +85,8 @@ class DiskController extends Controller
             'driver_id' => ['required', 'integer'],
             'team_id' => ['required', Rule::in($team_ids)],
             'backup_id' => ['nullable', 'integer'],
+            'template_id' => ['nullable', 'integer'],
+            'is_template' => ['required', 'boolean'],
             'private' => ['required', 'boolean'],
             'encode_files' => ['required', 'boolean'],
         ])->validateWithBag('createDisk');
@@ -89,7 +105,7 @@ class DiskController extends Controller
     public function show(Disk $disk)
     {
         return Inertia::render('Disks/Show', [
-            'disk' => $disk->load('driver'),
+            'disk' => $disk->load('driver', 'template', 'template.diskDriverFields'),
             'driverFields' => $disk->driver->driverFields->map(function ($field) use ($disk) {
                 $driverField = $disk->diskDriverFields()->where('driver_field_id', $field->id)->first();
                 return [
@@ -102,7 +118,13 @@ class DiskController extends Controller
                     'value' => $driverField ? ($field->encrypt ? \Illuminate\Support\Facades\Crypt::decryptString($driverField->value) : $driverField->value) : null,
                 ];
             }),
-            'backup_disks' => Disk::where('id', '!=', $disk->id)->whereIn('team_id', auth()->user()->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get()->map(function ($disk) {
+            'backup_disks' => Disk::where('is_template', false)->where('id', '!=', $disk->id)->whereIn('team_id', auth()->user()->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get()->map(function ($disk) {
+                return [
+                    'id' => $disk->id,
+                    'name' => $disk->name,
+                ];
+            }),
+            'templates' => Disk::where('is_template', true)->where('id', '!=', $disk->id)->whereIn('team_id', auth()->user()->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get()->map(function ($disk) {
                 return [
                     'id' => $disk->id,
                     'name' => $disk->name,
@@ -137,6 +159,8 @@ class DiskController extends Controller
             'name' => ['required', 'string', 'max:60'],
             'private' => ['required', 'boolean'],
             'backup_id' => ['nullable', 'integer'],
+            'template_id' => ['nullable', 'integer'],
+            'is_template' => ['required', 'boolean'],
         ])->validateWithBag('updateDiskName');
         
         $disk->update($input);
@@ -211,12 +235,12 @@ class DiskController extends Controller
         }
     }
 
-    private function allowedDisks()
+    private function allowedDisks($is_template = false)
     {
         $user = auth()->user();
 
         return $user->is_admin ?
-            Disk::all() :
-            Disk::whereIn('team_id', $user->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get();
+            Disk::where('is_template', $is_template)->get() :
+            Disk::where('is_template', $is_template)->whereIn('team_id', $user->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get();
     }
 }

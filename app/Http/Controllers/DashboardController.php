@@ -24,6 +24,6 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         
-        return Disk::whereIn('team_id', $user->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get();
+        return Disk::where('is_template', false)->whereIn('team_id', $user->allTeams()->map(function ($team) { return ['id' => $team->id]; })->pluck('id'))->get();
     }
 }
