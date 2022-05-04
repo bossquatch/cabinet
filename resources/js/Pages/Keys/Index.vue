@@ -50,6 +50,9 @@
                                                             {{ key.value }}
                                                         </div>
                                                         <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"/>
+                                                        <jet-action-message :on="currentClipboard == key.value" class="ml-2">
+                                                            Copied.
+                                                        </jet-action-message>
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                         {{ key.public ? "Yes" : "No" }}
@@ -70,7 +73,10 @@
                                                         <div class="blur-sm">
                                                             {{ key.value }}
                                                         </div>
-                                                        <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"></clipboard-copy-icon>
+                                                        <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"/>
+                                                        <jet-action-message :on="currentClipboard == key.value" class="ml-2">
+                                                            Copied.
+                                                        </jet-action-message>
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                         {{ key.public ? "Yes" : "No" }}
@@ -127,7 +133,10 @@
                                                         <div class="blur-sm">
                                                             {{ key.value }}
                                                         </div>
-                                                        <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"></clipboard-copy-icon>
+                                                        <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"/>
+                                                        <jet-action-message :on="currentClipboard == key.value" class="ml-2">
+                                                            Copied.
+                                                        </jet-action-message>
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                         {{ key.public ? "Yes" : "No" }}
@@ -179,15 +188,25 @@
             EditIcon
         },
 
+        data() {
+            return {
+                currentClipboard: ""
+            }
+        },
+
         methods: {
             copy(text) {
                 var input = document.createElement('textarea')
                 document.body.appendChild(input)
                 input.value = text
-                input.focus()
                 input.select()
                 document.execCommand('Copy')
                 input.remove()
+
+                this.currentClipboard = text
+                setTimeout(() => {
+                    this.currentClipboard = ""
+                }, 500)
             }
         }
     })

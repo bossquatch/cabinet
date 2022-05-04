@@ -106,7 +106,7 @@
             generatePassword() {
                 let password = ""
                 let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
-                let passwordLength = Math.floor(Math.random() * 225)
+                let passwordLength = Math.floor(Math.random() * 100)
 
                 for (let i = 0; i < passwordLength; i++)
                 {

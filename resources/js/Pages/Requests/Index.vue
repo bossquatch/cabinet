@@ -41,7 +41,7 @@
                                     <tbody>
                                         <template v-if="requests.length">
                                             <tr v-for="(request, index) in requests" :key="request" :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
-                                                    <td class="px-6 py-4 text-sm font-medium text-gray-500 whitespace-nowrap">
+                                                    <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                                         {{ request.admin_name }}
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
