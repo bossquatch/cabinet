@@ -77,7 +77,7 @@
                 </div>
             </div>
             <!-- Approve Request Confirmation Modal -->
-            <jet-dialog-modal :show="confirmingApproval" @close="closeApproveModal">
+            <jet-confirmation-modal :show="confirmingApproval" @close="closeApproveModal">
                 <template #title>
                     Key Access Request Approval
                 </template>
@@ -95,10 +95,10 @@
                         Approve
                     </jet-button>
                 </template>
-            </jet-dialog-modal>
+            </jet-confirmation-modal>
 
             <!-- Delete Request Confirmation Modal -->
-            <jet-dialog-modal :show="confirmingDeletion" @close="closeDeleteModal">
+            <jet-confirmation-modal :show="confirmingDeletion" @close="closeDeleteModal">
                 <template #title>
                     Delete Key Access Request
                 </template>
@@ -116,7 +116,7 @@
                         Delete Request
                     </jet-danger-button>
                 </template>
-            </jet-dialog-modal>
+            </jet-confirmation-modal>
         </div>
     </app-layout>
 </template>
@@ -127,7 +127,7 @@
     import JetSectionBorder from '@/Jetstream/SectionBorder'
     import CustomNavLink from '@/BuildingBlocks/NavLink'
     import JetButton from '@/Jetstream/Button.vue'
-    import JetDialogModal from '@/Jetstream/DialogModal.vue'
+    import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetDangerButton from '@/Jetstream/DangerButton.vue'
     import TrashIcon from '@/HeroIcons/Trash.vue'
@@ -141,7 +141,7 @@
             CustomNavLink,
             JetSectionBorder,
             JetButton,
-            JetDialogModal,
+            JetConfirmationModal,
             JetSecondaryButton,
             JetDangerButton,
             TrashIcon,

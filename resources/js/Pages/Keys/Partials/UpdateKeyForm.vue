@@ -46,7 +46,7 @@
             </jet-button>
 
             <!-- Public Key Confirmation Modal -->
-            <jet-dialog-modal :show="confirmingKeyUpdate" @close="closeModal">
+            <jet-confirmation-modal :show="confirmingKeyUpdate" @close="confirmingKeyUpdate = false">
                 <template #title>
                     Public Key
                 </template>
@@ -56,7 +56,7 @@
                 </template>
 
                 <template #footer>
-                    <jet-secondary-button @click="closeModal">
+                    <jet-secondary-button @click="confirmingKeyUpdate = false">
                         Cancel
                     </jet-secondary-button>
 
@@ -64,7 +64,7 @@
                         Confirm
                     </jet-button>
                 </template>
-            </jet-dialog-modal>
+            </jet-confirmation-modal>
         </template>
     </jet-form-section>
 </template>
@@ -72,7 +72,7 @@
 <script>
     import { defineComponent } from 'vue'
     import JetActionMessage from '@/Jetstream/ActionMessage'
-    import JetDialogModal from '@/Jetstream/DialogModal.vue'
+    import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import JetButton from '@/Jetstream/Button'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetFormSection from '@/Jetstream/FormSection'
@@ -85,7 +85,7 @@
     export default defineComponent({
         components: {
             JetActionMessage,
-            JetDialogModal,
+            JetConfirmationModal,
             JetButton,
             JetSecondaryButton,
             JetFormSection,
@@ -123,14 +123,9 @@
 
             updateKey() {
                 this.form.put(route('key.update', this.skey), {
-                    errorBag: 'updateKey',
-                    preserveScroll: true
+                    preserveScroll: true,
+                    onSuccess: () => this.confirmingKeyUpdate = false
                 });
-                this.closeModal()
-            },
-
-            closeModal() {
-                this.confirmingKeyUpdate = false
             },
         },
     })

@@ -39,7 +39,7 @@
             </jet-button>
 
             <!-- Public Key Confirmation Modal -->
-            <jet-dialog-modal :show="confirmingKeyCreation" @close="closeModal">
+            <jet-confirmation-modal :show="confirmingKeyCreation" @close="confirmingKeyCreation = false">
                 <template #title>
                     Public Key
                 </template>
@@ -49,7 +49,7 @@
                 </template>
 
                 <template #footer>
-                    <jet-secondary-button @click="closeModal">
+                    <jet-secondary-button @click="confirmingKeyCreation = false">
                         Cancel
                     </jet-secondary-button>
 
@@ -57,7 +57,7 @@
                         Confirm
                     </jet-button>
                 </template>
-            </jet-dialog-modal>
+            </jet-confirmation-modal>
         </template>
     </jet-form-section>
 </template>
@@ -65,7 +65,7 @@
 <script>
     import { defineComponent } from 'vue'
     import JetActionMessage from '@/Jetstream/ActionMessage'
-    import JetDialogModal from '@/Jetstream/DialogModal.vue'
+    import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import JetButton from '@/Jetstream/Button.vue'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetFormSection from '@/Jetstream/FormSection.vue'
@@ -78,7 +78,7 @@
     export default defineComponent({
         components: {
             JetActionMessage,
-            JetDialogModal,
+            JetConfirmationModal,
             JetButton,
             JetSecondaryButton,
             JetFormSection,
@@ -132,10 +132,6 @@
                     errorBag: 'createKey',
                     preserveScroll: true
                 });
-            },
-
-            closeModal() {
-                this.confirmingKeyCreation = false
             },
         },
     })
