@@ -30,10 +30,6 @@
         </template>
 
         <template #actions>
-            <jet-action-message :on="form.recentlySuccessful" class="mr-3">
-                Created.
-            </jet-action-message>
-
             <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 Create
             </jet-button>
@@ -64,7 +60,6 @@
 
 <script>
     import { defineComponent } from 'vue'
-    import JetActionMessage from '@/Jetstream/ActionMessage'
     import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import JetButton from '@/Jetstream/Button.vue'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
@@ -73,11 +68,9 @@
     import JetInputError from '@/Jetstream/InputError.vue'
     import JetLabel from '@/Jetstream/Label.vue'
     import CustomCheckbox from '@/BuildingBlocks/Checkbox.vue'
-    import CustomSelect from '@/BuildingBlocks/Select.vue'
 
     export default defineComponent({
         components: {
-            JetActionMessage,
             JetConfirmationModal,
             JetButton,
             JetSecondaryButton,
@@ -86,7 +79,6 @@
             JetInputError,
             JetLabel,
             CustomCheckbox,
-            CustomSelect,
         },
 
         data() {
@@ -130,8 +122,9 @@
             createKey() {
                 this.form.post(route('key.store'), {
                     errorBag: 'createKey',
-                    preserveScroll: true
+                    preserveScroll: true,
                 });
+                this.confirmingKeyCreation = false
             },
         },
     })

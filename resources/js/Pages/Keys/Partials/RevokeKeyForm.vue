@@ -52,34 +52,20 @@
 
 <script>
     import { defineComponent } from 'vue'
-    import JetActionMessage from '@/Jetstream/ActionMessage'
     import JetActionSection from '@/Jetstream/ActionSection.vue'
     import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import JetButton from '@/Jetstream/Button.vue'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetDangerButton from '@/Jetstream/DangerButton.vue'
-    import JetFormSection from '@/Jetstream/FormSection.vue'
-    import JetInput from '@/Jetstream/Input.vue'
-    import JetInputError from '@/Jetstream/InputError.vue'
-    import JetLabel from '@/Jetstream/Label.vue'
     import JetSectionBorder from '@/Jetstream/SectionBorder.vue'
-    import CustomCheckbox from '@/BuildingBlocks/Checkbox.vue'
-    import CustomSelect from '@/BuildingBlocks/Select.vue'
 
     export default defineComponent({
         components: {
-            JetActionMessage,
             JetActionSection,
             JetConfirmationModal,
             JetButton,
             JetSecondaryButton,
             JetDangerButton,
-            JetFormSection,
-            JetInput,
-            JetInputError,
-            JetLabel,
-            CustomCheckbox,
-            CustomSelect,
             JetSectionBorder,
         },
 

@@ -49,8 +49,6 @@
     import JetActionSection from '@/Jetstream/ActionSection.vue'
     import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import JetDangerButton from '@/Jetstream/DangerButton.vue'
-    import JetInput from '@/Jetstream/Input.vue'
-    import JetInputError from '@/Jetstream/InputError.vue'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetSectionBorder from '@/Jetstream/SectionBorder.vue'
 
@@ -59,8 +57,6 @@
             JetActionSection,
             JetDangerButton,
             JetConfirmationModal,
-            JetInput,
-            JetInputError,
             JetSecondaryButton,
             JetSectionBorder,
         },

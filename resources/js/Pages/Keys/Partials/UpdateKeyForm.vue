@@ -11,23 +11,13 @@
         <template #form>
             <div class="col-span-6 sm:col-span-4">
                 <jet-label for="description" value="Key Description" />
-
-                <jet-input id="description"
-                            type="text"
-                            class="block w-full mt-1"
-                            v-model="form.description" />
-
+                <jet-input id="description" type="text" class="block w-full mt-1" v-model="form.description" />
                 <jet-input-error :message="form.errors.description" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
                 <jet-label for="value" value="Value" />
-
-                <jet-input id="value"
-                            type="text"
-                            class="block w-full mt-1"
-                            v-model="form.value" />
-
+                <jet-input id="value" type="text" class="block w-full mt-1" v-model="form.value" />
                 <jet-input-error :message="form.errors.value" />
             </div>
 
@@ -80,7 +70,6 @@
     import JetInputError from '@/Jetstream/InputError'
     import JetLabel from '@/Jetstream/Label'
     import CustomCheckbox from '@/BuildingBlocks/Checkbox.vue'
-    import CustomSelect from '@/BuildingBlocks/Select.vue'
 
     export default defineComponent({
         components: {
@@ -93,7 +82,6 @@
             JetInputError,
             JetLabel,
             CustomCheckbox,
-            CustomSelect,
         },
 
         props: ['skey'],
@@ -123,9 +111,10 @@
 
             updateKey() {
                 this.form.put(route('key.update', this.skey), {
+                    errorBag: "updateKey",
                     preserveScroll: true,
-                    onSuccess: () => this.confirmingKeyUpdate = false
                 });
+                this.confirmingKeyUpdate = false
             },
         },
     })
