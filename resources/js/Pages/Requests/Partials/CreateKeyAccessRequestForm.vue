@@ -42,7 +42,6 @@
     import JetInputError from '@/Jetstream/InputError.vue'
     import JetLabel from '@/Jetstream/Label.vue'
     import CustomCheckbox from '@/BuildingBlocks/Checkbox.vue'
-    import CustomSelect from '@/BuildingBlocks/Select.vue'
 
     export default defineComponent({
         components: {
@@ -53,7 +52,6 @@
             JetInputError,
             JetLabel,
             CustomCheckbox,
-            CustomSelect,
         },
 
         data() {

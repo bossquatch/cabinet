@@ -11,23 +11,13 @@
         <template #form>
             <div class="col-span-6 sm:col-span-4">
                 <jet-label for="description" value="Key Description" />
-
-                <jet-input id="description"
-                            type="text"
-                            class="block w-full mt-1"
-                            v-model="form.description" />
-
+                <jet-input id="description" type="text" class="block w-full mt-1" v-model="form.description" />
                 <jet-input-error :message="form.errors.description" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
                 <jet-label for="value" value="Value" />
-
-                <jet-input id="value"
-                            type="text"
-                            class="block w-full mt-1"
-                            v-model="form.value" />
-
+                <jet-input id="value" type="text" class="block w-full mt-1" v-model="form.value" />
                 <jet-input-error :message="form.errors.value" />
             </div>
 
@@ -46,7 +36,7 @@
             </jet-button>
 
             <!-- Public Key Confirmation Modal -->
-            <jet-dialog-modal :show="confirmingKeyUpdate" @close="closeModal">
+            <jet-confirmation-modal :show="confirmingKeyUpdate" @close="confirmingKeyUpdate = false">
                 <template #title>
                     Public Key
                 </template>
@@ -56,7 +46,7 @@
                 </template>
 
                 <template #footer>
-                    <jet-secondary-button @click="closeModal">
+                    <jet-secondary-button @click="confirmingKeyUpdate = false">
                         Cancel
                     </jet-secondary-button>
 
@@ -64,7 +54,7 @@
                         Confirm
                     </jet-button>
                 </template>
-            </jet-dialog-modal>
+            </jet-confirmation-modal>
         </template>
     </jet-form-section>
 </template>
@@ -72,7 +62,7 @@
 <script>
     import { defineComponent } from 'vue'
     import JetActionMessage from '@/Jetstream/ActionMessage'
-    import JetDialogModal from '@/Jetstream/DialogModal.vue'
+    import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import JetButton from '@/Jetstream/Button'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetFormSection from '@/Jetstream/FormSection'
@@ -80,12 +70,11 @@
     import JetInputError from '@/Jetstream/InputError'
     import JetLabel from '@/Jetstream/Label'
     import CustomCheckbox from '@/BuildingBlocks/Checkbox.vue'
-    import CustomSelect from '@/BuildingBlocks/Select.vue'
 
     export default defineComponent({
         components: {
             JetActionMessage,
-            JetDialogModal,
+            JetConfirmationModal,
             JetButton,
             JetSecondaryButton,
             JetFormSection,
@@ -93,7 +82,6 @@
             JetInputError,
             JetLabel,
             CustomCheckbox,
-            CustomSelect,
         },
 
         props: ['skey'],
@@ -123,13 +111,9 @@
 
             updateKey() {
                 this.form.put(route('key.update', this.skey), {
-                    errorBag: 'updateKey',
-                    preserveScroll: true
+                    errorBag: "updateKey",
+                    preserveScroll: true,
                 });
-                this.closeModal()
-            },
-
-            closeModal() {
                 this.confirmingKeyUpdate = false
             },
         },

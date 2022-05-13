@@ -17,7 +17,10 @@
 
             <div class="col-span-6 sm:col-span-4">
                 <jet-label for="value" value="Value" />
-                <jet-input id="value" type="text" class="block w-full mt-1" v-model="form.value" autofocus/>
+                <div class="flex">
+                    <jet-input id="value" type="text" class="block w-full mt-1" v-model="form.value" autofocus/>
+                    <jet-button type="button" @click="generatePassword" class="ml-2">Generate Password</jet-button>
+                </div>
                 <jet-input-error :message="form.errors.value" class="mt-2" />
             </div>
 
@@ -27,16 +30,12 @@
         </template>
 
         <template #actions>
-            <jet-action-message :on="form.recentlySuccessful" class="mr-3">
-                Created.
-            </jet-action-message>
-
             <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 Create
             </jet-button>
 
             <!-- Public Key Confirmation Modal -->
-            <jet-dialog-modal :show="confirmingKeyCreation" @close="closeModal">
+            <jet-confirmation-modal :show="confirmingKeyCreation" @close="confirmingKeyCreation = false">
                 <template #title>
                     Public Key
                 </template>
@@ -46,7 +45,7 @@
                 </template>
 
                 <template #footer>
-                    <jet-secondary-button @click="closeModal">
+                    <jet-secondary-button @click="confirmingKeyCreation = false">
                         Cancel
                     </jet-secondary-button>
 
@@ -54,15 +53,14 @@
                         Confirm
                     </jet-button>
                 </template>
-            </jet-dialog-modal>
+            </jet-confirmation-modal>
         </template>
     </jet-form-section>
 </template>
 
 <script>
     import { defineComponent } from 'vue'
-    import JetActionMessage from '@/Jetstream/ActionMessage'
-    import JetDialogModal from '@/Jetstream/DialogModal.vue'
+    import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import JetButton from '@/Jetstream/Button.vue'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetFormSection from '@/Jetstream/FormSection.vue'
@@ -70,12 +68,10 @@
     import JetInputError from '@/Jetstream/InputError.vue'
     import JetLabel from '@/Jetstream/Label.vue'
     import CustomCheckbox from '@/BuildingBlocks/Checkbox.vue'
-    import CustomSelect from '@/BuildingBlocks/Select.vue'
 
     export default defineComponent({
         components: {
-            JetActionMessage,
-            JetDialogModal,
+            JetConfirmationModal,
             JetButton,
             JetSecondaryButton,
             JetFormSection,
@@ -83,7 +79,6 @@
             JetInputError,
             JetLabel,
             CustomCheckbox,
-            CustomSelect,
         },
 
         data() {
@@ -100,6 +95,19 @@
         },
 
         methods: {
+            generatePassword() {
+                let password = ""
+                let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ "
+                let passwordLength = Math.floor(Math.random() * 100)
+
+                for (let i = 0; i < passwordLength; i++)
+                {
+                    password += characters.charAt(Math.floor(Math.random() * characters.length))
+                }
+
+                this.form.value = password
+            },
+
             checkPublic() {
                 if (this.form.public)
                 {
@@ -114,11 +122,8 @@
             createKey() {
                 this.form.post(route('key.store'), {
                     errorBag: 'createKey',
-                    preserveScroll: true
+                    preserveScroll: true,
                 });
-            },
-
-            closeModal() {
                 this.confirmingKeyCreation = false
             },
         },

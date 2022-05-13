@@ -15,13 +15,13 @@
                 </div>
 
                 <div class="mt-5">
-                    <jet-danger-button @click="confirmKeyDeletion">
+                    <jet-danger-button @click="confirmingKeyDeletion = true">
                         Delete Key
                     </jet-danger-button>
                 </div>
 
                 <!-- Delete Key Confirmation Modal -->
-                <jet-dialog-modal :show="confirmingKeyDeletion" @close="closeModal">
+                <jet-confirmation-modal :show="confirmingKeyDeletion" @close="confirmingKeyDeletion = false">
                     <template #title>
                         Delete Key
                     </template>
@@ -31,15 +31,15 @@
                     </template>
 
                     <template #footer>
-                        <jet-secondary-button @click="closeModal">
+                        <jet-secondary-button @click="confirmingKeyDeletion = false">
                             Cancel
                         </jet-secondary-button>
 
                         <jet-danger-button class="ml-2" @click="deleteKey" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                            Delete Key
+                            Delete
                         </jet-danger-button>
                     </template>
-                </jet-dialog-modal>
+                </jet-confirmation-modal>
             </template>
         </jet-action-section>
 </template>
@@ -47,10 +47,8 @@
 <script>
     import { defineComponent } from 'vue'
     import JetActionSection from '@/Jetstream/ActionSection.vue'
-    import JetDialogModal from '@/Jetstream/DialogModal.vue'
+    import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import JetDangerButton from '@/Jetstream/DangerButton.vue'
-    import JetInput from '@/Jetstream/Input.vue'
-    import JetInputError from '@/Jetstream/InputError.vue'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetSectionBorder from '@/Jetstream/SectionBorder.vue'
 
@@ -58,9 +56,7 @@
         components: {
             JetActionSection,
             JetDangerButton,
-            JetDialogModal,
-            JetInput,
-            JetInputError,
+            JetConfirmationModal,
             JetSecondaryButton,
             JetSectionBorder,
         },
@@ -75,19 +71,11 @@
         },
 
         methods: {
-            confirmKeyDeletion() {
-                this.confirmingKeyDeletion = true
-            },
-
             deleteKey() {
                 this.form.delete(route('key.delete', this.skey), {
                     preserveScroll: true,
-                    onSuccess: () => this.closeModal(),
+                    onSuccess: () => confirmingKeyDeletion = false,
                 })
-            },
-
-            closeModal() {
-                this.confirmingKeyDeletion = false
             },
         },
     })

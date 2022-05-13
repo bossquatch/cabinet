@@ -50,8 +50,10 @@
                                                 <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                     {{ driver.name }}
                                                 </td>
-                                                <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                                    <custom-nav-link :href="driver.edit_url" class="text-indigo-600 hover:text-indigo-900">Edit</custom-nav-link>
+                                                <td class="flex px-6 py-4 text-sm font-medium text-right place-content-end whitespace-nowrap">
+                                                    <custom-nav-link :href="driver.edit_url" class="text-indigo-600 hover:text-indigo-900">
+                                                        <edit-icon/>
+                                                    </custom-nav-link>
                                                 </td>
                                             </tr>
                                         </template>
@@ -78,6 +80,7 @@
     import AppLayout from '@/Layouts/AppLayout.vue'
     import JetSectionBorder from '@/Jetstream/SectionBorder'
     import CustomNavLink from '@/BuildingBlocks/NavLink'
+    import EditIcon from '@/HeroIcons/Edit.vue'
 
     export default defineComponent({
         props: [
@@ -88,6 +91,7 @@
             AppLayout,
             CustomNavLink,
             JetSectionBorder,
+            EditIcon
         },
     })
 </script>

@@ -33,15 +33,15 @@
                                             <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                                 Purpose
                                             </th>
-                                            <th scope="col" class="relative px-6 py-3">
-                                                <span class="sr-only">Edit</span>
+                                            <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                                Status
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <template v-if="requests.length">
                                             <tr v-for="(request, index) in requests" :key="request" :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
-                                                    <td class="px-6 py-4 text-sm font-medium text-gray-500 whitespace-nowrap">
+                                                    <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                                         {{ request.admin_name }}
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
@@ -50,19 +50,15 @@
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                         {{ request.purpose }}
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                                        <jet-danger-button v-if="$page.props.user.id == request.admin_id" @click="deleteConfirmation(request)">
-                                                            Delete
-                                                        </jet-danger-button>
-                                                        <jet-button v-else-if="!request.approved" @click="approveConfirmation(request)" class="inline-flex items-center text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                                            Approve
-                                                        </jet-button>
-                                                        <div v-if="request.approved" class="ml-4 inline-flex items-center text-sm font-medium text-green-600">
+                                                    <td class="flex justify-between px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                        <div v-if="request.approved" class="text-green-600">
                                                             Approved
                                                         </div>
-                                                        <div v-else class="ml-6 inline-flex items-center text-sm font-medium">
+                                                        <div v-else>
                                                             Pending
                                                         </div>
+                                                        <trash-icon v-if="$page.props.user.id == request.admin_id" @click="deleteConfirmation(request)" class="cursor-pointer text-red-600 hover:text-red-900"/>
+                                                        <check-icon v-else-if="!request.approved" @click="approveConfirmation(request)" class="cursor-pointer w-6 text-green-600 hover:text-green-900"/>
                                                     </td>
                                                 </tr>
                                         </template>
@@ -81,7 +77,7 @@
                 </div>
             </div>
             <!-- Approve Request Confirmation Modal -->
-            <jet-dialog-modal :show="confirmingApproval" @close="closeApproveModal">
+            <jet-confirmation-modal :show="confirmingApproval" @close="closeApproveModal">
                 <template #title>
                     Key Access Request Approval
                 </template>
@@ -99,10 +95,10 @@
                         Approve
                     </jet-button>
                 </template>
-            </jet-dialog-modal>
+            </jet-confirmation-modal>
 
             <!-- Delete Request Confirmation Modal -->
-            <jet-dialog-modal :show="confirmingDeletion" @close="closeDeleteModal">
+            <jet-confirmation-modal :show="confirmingDeletion" @close="closeDeleteModal">
                 <template #title>
                     Delete Key Access Request
                 </template>
@@ -120,7 +116,7 @@
                         Delete Request
                     </jet-danger-button>
                 </template>
-            </jet-dialog-modal>
+            </jet-confirmation-modal>
         </div>
     </app-layout>
 </template>
@@ -131,9 +127,11 @@
     import JetSectionBorder from '@/Jetstream/SectionBorder'
     import CustomNavLink from '@/BuildingBlocks/NavLink'
     import JetButton from '@/Jetstream/Button.vue'
-    import JetDialogModal from '@/Jetstream/DialogModal.vue'
+    import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetDangerButton from '@/Jetstream/DangerButton.vue'
+    import TrashIcon from '@/HeroIcons/Trash.vue'
+    import CheckIcon from '@/HeroIcons/Check.vue'
 
     export default defineComponent({
         props: ['requests'],
@@ -143,9 +141,11 @@
             CustomNavLink,
             JetSectionBorder,
             JetButton,
-            JetDialogModal,
+            JetConfirmationModal,
             JetSecondaryButton,
-            JetDangerButton
+            JetDangerButton,
+            TrashIcon,
+            CheckIcon
         },
 
         data() {

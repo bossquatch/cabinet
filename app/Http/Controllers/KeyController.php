@@ -37,16 +37,6 @@ class KeyController extends Controller
                     'edit_url' => route('key.show', $key),
                 ];
             }),
-            'sharedKeys' => $this->allowedSharedKeys()->map(function ($key) {
-                return [
-                    'user_id' => $key->user_id,
-                    'owner_id' => $key->owner_id,
-                    'description' => $key->description,
-                    'value' => Crypt::decryptString($key->value),
-                    'public' => $key->public,
-                    'edit_url' => route('key.show', $key),
-                ];
-            }),
             'adminAccessedKeys' => $this->allowedAdminAccessedKeys()->map(function ($key) {
                 return [
                     'user_id' => $key->user_id,
@@ -252,29 +242,20 @@ class KeyController extends Controller
     }
 
     /**
-     * Get the allowed personal and public keys for the user.
+     * Get the allowed personal, public, and shared keys for the user.
      *
      * @return array
      */
     private function allowedKeys()
     {
         $user = auth()->user();
+
+        $skeys = SharedKey::select('*')->where('shared_email', '=', $user->email)->get();
         
-        return Key::where('user_id', $user->id)->orWhere('public', true)->get();
-    }
-
-    /**
-     * Get the allowed shared keys for the user.
-     *
-     * @return array
-     */
-    private function allowedSharedKeys()
-    {
-        $user = auth()->user();
-
-        $keys = SharedKey::select('*')->where('shared_email', '=', $user->email)->get();
-
-        return Key::whereIn('id', $keys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))->get();
+        return Key::where('user_id', $user->id)
+            ->orWhere('public', true)
+            ->orWhereIn('id', $skeys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))
+            ->get();
     }
 
     /**
