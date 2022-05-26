@@ -175,27 +175,25 @@ class KeyController extends Controller
     public function teamShare(Request $request, Team $team)
     {
         $input = $request->all();
-        
-        foreach ($team->users as $user)
-        {
-            $userInfo = User::where('id', $user->id)->firstorfail();
-            $input['shared_email'] = $userInfo->email;
-            
-            $alreadyShared = SharedKey::select('*')
-                ->where('key_id', '=', $input['key_id'])
-                ->where('shared_email', '=', $input['shared_email'])
-                ->exists();
+        $users = $team->allUsers();
+        $currentUser = auth()->user();
 
-            if (!$alreadyShared)
+        foreach ($users as $user)
+        {
+            if ($user->id != $currentUser->id)
             {
-                Validator::make($input, [
-                    'key_id' => ['required'],
-                    'shared_email' => ['required', 'string', 'max:255'],
-                ])->after(
-                    $this->ensureKeyNotAlreadyShared($input)
-                )->validateWithBag('shareTeamKey');
-        
-                SharedKey::create($input);
+                $userInfo = User::where('id', $user->id)->firstorfail();
+                $input['shared_email'] = $userInfo->email;
+                
+                $alreadyShared = SharedKey::select('*')
+                    ->where('key_id', '=', $input['key_id'])
+                    ->where('shared_email', '=', $input['shared_email'])
+                    ->exists();
+
+                if (!$alreadyShared)
+                {
+                    SharedKey::create($input);
+                }
             }
         }
 
