@@ -29793,7 +29793,7 @@ var _hoisted_9 = {
   "class": "flex px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
 };
 var _hoisted_10 = {
-  "class": "blur-sm"
+  "class": "blur-sm max-w-2xl truncate"
 };
 
 var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Copied. ");
@@ -31913,7 +31913,7 @@ var _hoisted_13 = {
   "class": "px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
 };
 var _hoisted_14 = {
-  "class": "px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
+  "class": "px-6 py-4 text-sm text-gray-500 max-w-md"
 };
 var _hoisted_15 = {
   "class": "flex justify-between px-6 py-4 text-sm text-gray-500 whitespace-nowrap"

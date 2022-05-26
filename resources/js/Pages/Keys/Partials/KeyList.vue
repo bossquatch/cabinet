@@ -28,7 +28,7 @@
                                             {{ key.description }}
                                         </td>
                                         <td class="flex px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                            <div class="blur-sm">
+                                            <div class="blur-sm max-w-2xl truncate">
                                                 {{ key.value }}
                                             </div>
                                             <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"/>
