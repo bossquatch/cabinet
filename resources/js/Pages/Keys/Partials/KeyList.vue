@@ -28,8 +28,14 @@
                                             {{ key.description }}
                                         </td>
                                         <td class="flex px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                            <div class="blur-sm max-w-2xl truncate">
+                                            <div :class="hiddenKeys[index]===false ? 'max-w-2xl truncate' : 'blur-sm max-w-2xl truncate'">
                                                 {{ key.value }}
+                                            </div>
+                                            <div v-if="hiddenKeys[index]===false" class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="hiddenKeys[index]=true">
+                                                <show-icon></show-icon>
+                                            </div>
+                                            <div v-else class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="hiddenKeys[index]=false">
+                                                <hide-icon></hide-icon>
                                             </div>
                                             <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"/>
                                             <jet-action-message :on="currentClipboard == key.value" class="ml-2">
@@ -76,6 +82,8 @@
     import JetActionMessage from '@/Jetstream/ActionMessage'
     import ClipboardCopyIcon from '@/HeroIcons/ClipboardCopy.vue'
     import EditIcon from '@/HeroIcons/Edit.vue'
+    import ShowIcon from '@/HeroIcons/Show.vue'
+    import HideIcon from '@/HeroIcons/Hide.vue'
 
     export default defineComponent({
         props: [
@@ -88,11 +96,14 @@
             JetActionMessage,
             ClipboardCopyIcon,
             EditIcon,
+            ShowIcon,
+            HideIcon,
         },
 
         data() {
             return {
-                currentClipboard: ""
+                currentClipboard: "",
+                hiddenKeys: [].fill(false)
             }
         },
 
@@ -100,6 +111,9 @@
             keyQuery() {
                 if (this.searchQuery)
                 {
+                    this.hiddenKeys.forEach(function(part, index, arr){
+                        arr[index] = true
+                    })
                     return this.keys.filter(item => {
                         return this.searchQuery
                             .toLowerCase()
