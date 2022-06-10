@@ -87,9 +87,21 @@ Route::post('/key/share', [KeyController::class, 'userShare'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('key.userShare');
 
+Route::post('/key/createCategory', [KeyController::class, 'createCategory'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.createCategory');
+
+    Route::post('/key/updateCategory', [KeyController::class, 'updateCategory'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.updateCategory');
+
 Route::post('/key/{team}', [KeyController::class, 'teamShare'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('key.teamShare');
+
+Route::delete('/key/category/{key}', [KeyController::class, 'removeCategory'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('key.removeCategory');
 
 Route::delete('/key/{key}/{user}', [KeyController::class, 'revoke'])
     ->middleware(['auth:sanctum', 'verified'])

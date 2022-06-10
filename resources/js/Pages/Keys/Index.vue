@@ -18,7 +18,7 @@
         </template>
 
         <div>
-            <key-list :keys="keys" :searchQuery="keySearchQuery" :hasAdminAccess="false" />
+            <key-list :categories="categories" :categoryKeys="categoryKeys" :keys="keys" :searchQuery="keySearchQuery" :hasAdminAccess="false" />
 
             <div v-if="$page.props.user.is_admin">
                 <jet-section-border class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8" />
@@ -35,7 +35,7 @@
                     </div>
                 </div>
 
-                <key-list :keys="adminAccessedKeys" :searchQuery="adminKeySearchQuery" :hasAdminAccess="true" />
+                <key-list :categories="''" :categoryKeys="''" :keys="adminAccessedKeys" :searchQuery="adminKeySearchQuery" :hasAdminAccess="true" />
             </div>
         </div>
     </app-layout>
@@ -51,7 +51,7 @@
     import SearchIcon from '@/HeroIcons/Search.vue'
 
     export default defineComponent({
-        props: ['keys', 'adminAccessedKeys'],
+        props: [ 'categories', 'categoryKeys', 'keys', 'adminAccessedKeys'],
 
         components: {
             AppLayout,

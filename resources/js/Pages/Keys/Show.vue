@@ -9,6 +9,8 @@
         <div>
             <div class="py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <update-key-form :skey="skey" />
+
+                <update-category-form :skey="skey" :categories="categories" :currentCategory="currentCategory" />
                 
                 <share-key-form v-if="skey.public == false" :skey="skey" />
 
@@ -25,17 +27,19 @@
     import AppLayout from '@/Layouts/AppLayout.vue'
     import JetSectionBorder from '@/Jetstream/SectionBorder.vue'
     import UpdateKeyForm from '@/Pages/Keys/Partials/UpdateKeyForm.vue'
+    import UpdateCategoryForm from '@/Pages/Keys/Partials/UpdateCategoryForm.vue'
     import ShareKeyForm from '@/Pages/Keys/Partials/ShareKeyForm.vue'
     import RevokeKeyForm from '@/Pages/Keys/Partials/RevokeKeyForm.vue'
     import DeleteKeyForm from '@/Pages/Keys/Partials/DeleteKeyForm.vue'
 
     export default defineComponent({
-        props: ['skey', 'shared_users'],
+        props: ['skey', 'shared_users', 'categories', 'currentCategory'],
 
         components: {
             AppLayout,
             JetSectionBorder,
             UpdateKeyForm,
+            UpdateCategoryForm,
             ShareKeyForm,
             RevokeKeyForm,
             DeleteKeyForm,

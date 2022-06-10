@@ -78,4 +78,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(KeyAccessRequest::class);
     }
+
+    public function categorys()
+    {
+        return $this->hasMany(Category::class);
+    }
 }
