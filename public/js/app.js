@@ -21722,7 +21722,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      tableIndex: 0,
       currentClipboard: "",
       hiddenKeys: [].fill(false),
       categoryKeysVisible: [].fill(false)
@@ -30080,7 +30079,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }, [_ctx.keyQuery(category.keys).length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
       key: 0
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
-      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(_ctx.tableIndex++ % 2 === 0 ? 'bg-white' : 'bg-gray-50')
+      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(cat_index % 2 === 0 ? 'bg-white' : 'bg-gray-50')
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       onClick: function onClick($event) {
         return _ctx.toggleCategoryKeys(cat_index);
@@ -30096,18 +30095,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.keyQuery(category.keys), function (key, index) {
       return (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
         key: key,
-        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(_ctx.tableIndex++ % 2 === 0 ? 'bg-white' : 'bg-gray-50')
+        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(cat_index % 2 === 0 ? 'bg-white' : 'bg-gray-50')
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(key.description), 1
       /* TEXT */
       ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(_ctx.hiddenKeys[index] === false ? 'max-w-2xl truncate' : 'blur-sm max-w-2xl truncate')
+        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(_ctx.hiddenKeys[_ctx.categoryKeys.length * cat_index + index] === false ? 'max-w-2xl truncate' : 'blur-sm max-w-2xl truncate')
       }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(key.value), 3
       /* TEXT, CLASS */
-      ), _ctx.hiddenKeys[index] === false ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+      ), _ctx.hiddenKeys[_ctx.categoryKeys.length * cat_index + index] === false ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
         key: 0,
         "class": "cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900",
         onClick: function onClick($event) {
-          return _ctx.hiddenKeys[index] = true;
+          return _ctx.hiddenKeys[_ctx.categoryKeys.length * cat_index + index] = true;
         }
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_show_icon)], 8
       /* PROPS */
@@ -30115,7 +30114,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         key: 1,
         "class": "cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900",
         onClick: function onClick($event) {
-          return _ctx.hiddenKeys[index] = false;
+          return _ctx.hiddenKeys[_ctx.categoryKeys.length * cat_index + index] = false;
         }
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_hide_icon)], 8
       /* PROPS */
@@ -30170,18 +30169,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.keyQuery(_ctx.keys), function (key, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
       key: key,
-      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(_ctx.tableIndex++ % 2 === 0 ? 'bg-white' : 'bg-gray-50')
+      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(index++ % 2 === 0 ? 'bg-white' : 'bg-gray-50')
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(key.description), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(_ctx.hiddenKeys[index] === false ? 'max-w-2xl truncate' : 'blur-sm max-w-2xl truncate')
+      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(_ctx.hiddenKeys[index + _ctx.categoryKeys.length + 1] === false ? 'max-w-2xl truncate' : 'blur-sm max-w-2xl truncate')
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(key.value), 3
     /* TEXT, CLASS */
-    ), _ctx.hiddenKeys[index] === false ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+    ), _ctx.hiddenKeys[index + _ctx.categoryKeys.length + 1] === false ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: 0,
       "class": "cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900",
       onClick: function onClick($event) {
-        return _ctx.hiddenKeys[index] = true;
+        return _ctx.hiddenKeys[index + _ctx.categoryKeys.length + 1] = true;
       }
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_show_icon)], 8
     /* PROPS */
@@ -30189,7 +30188,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       key: 1,
       "class": "cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900",
       onClick: function onClick($event) {
-        return _ctx.hiddenKeys[index] = false;
+        return _ctx.hiddenKeys[index + _ctx.categoryKeys.length + 1] = false;
       }
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_hide_icon)], 8
     /* PROPS */
