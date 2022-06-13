@@ -1,5 +1,6 @@
 <template>
-    <jet-section-border />
+    <div v-if="$page.props.user.id == skey.user_id">
+        <jet-section-border />
         <jet-action-section>
             <template #title>
                 Update Category
@@ -42,6 +43,7 @@
                 </div>
             </template>
         </jet-action-section>
+    </div>
 </template>
 
 <script>
