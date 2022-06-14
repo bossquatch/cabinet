@@ -42,13 +42,13 @@
                                                         {{ key.description }}
                                                     </td>
                                                     <td class="flex px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                        <div :class="hiddenKeys[categoryKeys.length * cat_index + index]===false ? 'max-w-2xl truncate' : 'blur-sm max-w-2xl truncate'">
+                                                        <div :class="key.is_hidden ? 'blur-sm max-w-2xl truncate' : 'max-w-2xl truncate'">
                                                             {{ key.value }}
                                                         </div>
-                                                        <div v-if="hiddenKeys[categoryKeys.length * cat_index + index]===false" class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="hiddenKeys[categoryKeys.length * cat_index + index]=true">
+                                                        <div v-if="!key.is_hidden" class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="key.is_hidden = true">
                                                             <show-icon></show-icon>
                                                         </div>
-                                                        <div v-else class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="hiddenKeys[categoryKeys.length * cat_index + index]=false">
+                                                        <div v-else class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="key.is_hidden = false">
                                                             <hide-icon></hide-icon>
                                                         </div>
                                                         <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"/>
@@ -69,18 +69,18 @@
                                         </template>
                                     </template>
                                     <template v-if="keys.length && keyQuery(keys).length">
-                                        <tr v-for="(key, index) in keyQuery(keys)" :key="key" :class="index++ % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
+                                        <tr v-for="(key, index) in keyQuery(keys)" :key="key" :class="(index + categories.length) % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
                                             <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                                 {{ key.description }}
                                             </td>
                                             <td class="flex px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                <div :class="hiddenKeys[index + categoryKeys.length + 1]===false ? 'max-w-2xl truncate' : 'blur-sm max-w-2xl truncate'">
+                                                <div :class="key.is_hidden ? 'blur-sm max-w-2xl truncate' : 'max-w-2xl truncate'">
                                                     {{ key.value }}
                                                 </div>
-                                                <div v-if="hiddenKeys[index + categoryKeys.length + 1]===false" class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="hiddenKeys[index + categoryKeys.length + 1]=true">
+                                                <div v-if="!key.is_hidden" class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="key.is_hidden = true">
                                                     <show-icon></show-icon>
                                                 </div>
-                                                <div v-else class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="hiddenKeys[index + categoryKeys.length + 1]=false">
+                                                <div v-else class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="key.is_hidden = false">
                                                     <hide-icon></hide-icon>
                                                 </div>
                                                 <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"/>
@@ -148,7 +148,6 @@
         data() {
             return {
                 currentClipboard: "",
-                hiddenKeys: [].fill(false),
                 categoryKeysVisible: [].fill(false)
             }
         },
@@ -157,9 +156,6 @@
             keyQuery(qkeys) {
                 if (this.searchQuery)
                 {
-                    this.hiddenKeys.forEach(function(part, index, arr){
-                        arr[index] = true
-                    })
                     return qkeys.filter(item => {
                         return this.searchQuery
                             .toLowerCase()

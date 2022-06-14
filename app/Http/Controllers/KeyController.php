@@ -39,7 +39,7 @@ class KeyController extends Controller
                             'description' => $key->description,
                             'value' => Crypt::decryptString($key->value),
                             'public' => $key->public,
-                            'category' => $key->category,
+                            'is_hidden' => $key->is_hidden,
                             'edit_url' => route('key.show', $key)
                         ];
                     })
@@ -53,6 +53,7 @@ class KeyController extends Controller
                     'description' => $key->description,
                     'value' => Crypt::decryptString($key->value),
                     'public' => $key->public,
+                    'is_hidden' => $key->is_hidden,
                     'edit_url' => route('key.show', $key)
                 ];
             }),
@@ -64,6 +65,7 @@ class KeyController extends Controller
                     'description' => $key->description,
                     'value' => Crypt::decryptString($key->value),
                     'public' => $key->public,
+                    'is_hidden' => $key->is_hidden,
                     'edit_url' => route('key.show', $key)
                 ];
             }),
@@ -75,6 +77,7 @@ class KeyController extends Controller
                     'description' => $key->description,
                     'value' => Crypt::decryptString($key->value),
                     'public' => $key->public,
+                    'is_hidden' => $key->is_hidden,
                     'edit_url' => route('key.show', $key)
                 ];
             })
