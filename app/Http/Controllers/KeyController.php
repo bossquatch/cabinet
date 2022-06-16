@@ -7,6 +7,7 @@ use App\Models\SharedKey;
 use App\Models\User;
 use App\Models\Team;
 use App\Models\KeyAccessRequest;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -27,24 +28,57 @@ class KeyController extends Controller
         $this->adminKeyAccess();
 
         return Inertia::render('Keys/Index', [
-            'keys' => $this->allowedKeys()->map(function ($key) {
+            'categories' => $this->categories()->map(function ($cat) {
                 return [
+                    'name' => $cat->name,
+                    'keys' => $this->categoryKeys($cat->name)->map(function ($key) {
+                        return [
+                            'id' => $key->id,
+                            'user_id' => $key->user_id,
+                            'owner_id' => $key->owner_id,
+                            'description' => $key->description,
+                            'value' => Crypt::decryptString($key->value),
+                            'public' => $key->public,
+                            'is_hidden' => $key->is_hidden,
+                            'edit_url' => route('key.show', $key)
+                        ];
+                    })
+                ];
+            }),
+            'categoryKeys' => $this->allCategoryKeys()->map(function ($key) {
+                return [
+                    'id' => $key->id,
                     'user_id' => $key->user_id,
                     'owner_id' => $key->owner_id,
                     'description' => $key->description,
                     'value' => Crypt::decryptString($key->value),
                     'public' => $key->public,
-                    'edit_url' => route('key.show', $key),
+                    'is_hidden' => $key->is_hidden,
+                    'edit_url' => route('key.show', $key)
+                ];
+            }),
+            'keys' => $this->allowedKeys()->map(function ($key) {
+                return [
+                    'id' => $key->id,
+                    'user_id' => $key->user_id,
+                    'owner_id' => $key->owner_id,
+                    'description' => $key->description,
+                    'value' => Crypt::decryptString($key->value),
+                    'public' => $key->public,
+                    'is_hidden' => $key->is_hidden,
+                    'edit_url' => route('key.show', $key)
                 ];
             }),
             'adminAccessedKeys' => $this->allowedAdminAccessedKeys()->map(function ($key) {
                 return [
+                    'id' => $key->id,
                     'user_id' => $key->user_id,
                     'owner_id' => $key->owner_id,
                     'description' => $key->description,
                     'value' => Crypt::decryptString($key->value),
                     'public' => $key->public,
-                    'edit_url' => route('key.show', $key),
+                    'is_hidden' => $key->is_hidden,
+                    'edit_url' => route('key.show', $key)
                 ];
             })
         ]);
@@ -95,7 +129,8 @@ class KeyController extends Controller
     {   
         $shared_keys = SharedKey::where('key_id', '=', $key->id)->get();
         $shared_users = User::whereIn('email', $shared_keys->map(function ($k) { return ['email' => $k->shared_email]; }))->get();
-        
+        $currentCategory = Category::select('name')->where('key_id', $key->id)->first();
+
         try {
             $key->value = Crypt::decryptString($key->value);
         } catch (DecryptException $e) {
@@ -105,6 +140,12 @@ class KeyController extends Controller
         return Inertia::render('Keys/Show', [
             'skey' => $key->load('user'),
             'shared_users' => $shared_users,
+            'categories' => $this->categories()->map(function ($cat) {
+                return [
+                    'name' => $cat->name
+                ];
+            }),
+            'currentCategory' => $currentCategory
         ]);
     }
 
@@ -175,27 +216,25 @@ class KeyController extends Controller
     public function teamShare(Request $request, Team $team)
     {
         $input = $request->all();
-        
-        foreach ($team->users as $user)
-        {
-            $userInfo = User::where('id', $user->id)->firstorfail();
-            $input['shared_email'] = $userInfo->email;
-            
-            $alreadyShared = SharedKey::select('*')
-                ->where('key_id', '=', $input['key_id'])
-                ->where('shared_email', '=', $input['shared_email'])
-                ->exists();
+        $users = $team->allUsers();
+        $currentUser = auth()->user();
 
-            if (!$alreadyShared)
+        foreach ($users as $user)
+        {
+            if ($user->id != $currentUser->id)
             {
-                Validator::make($input, [
-                    'key_id' => ['required'],
-                    'shared_email' => ['required', 'string', 'max:255'],
-                ])->after(
-                    $this->ensureKeyNotAlreadyShared($input)
-                )->validateWithBag('shareTeamKey');
-        
-                SharedKey::create($input);
+                $userInfo = User::where('id', $user->id)->firstorfail();
+                $input['shared_email'] = $userInfo->email;
+                
+                $alreadyShared = SharedKey::select('*')
+                    ->where('key_id', '=', $input['key_id'])
+                    ->where('shared_email', '=', $input['shared_email'])
+                    ->exists();
+
+                if (!$alreadyShared)
+                {
+                    SharedKey::create($input);
+                }
             }
         }
 
@@ -242,7 +281,119 @@ class KeyController extends Controller
     }
 
     /**
-     * Get the allowed personal, public, and shared keys for the user.
+     * Removes a key from its category.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param \App\Models\Key $categoryKey
+     * @return \Illuminate\Http\Response
+     */
+    public function removeCategory(Request $request, Key $key)
+    {
+        $input = $request->all();
+
+        Category::select('*')
+            ->where('key_id', $key->id)
+            ->firstorfail()
+            ->delete();
+
+        return redirect()->route('key.show', ['key' => $key->id]);
+    }
+
+    /**
+     * Adds a key to a new category.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function createCategory(Request $request)
+    {
+        $input = $request->all();
+        
+        Validator::make($input, [
+            'user_id' => ['required'],
+            'key_id' => ['required'],
+            'name' => ['required', 'string', 'max:255']
+        ])->after(
+            $this->ensureCategoryNotExisting($input)
+        )->validateWithBag('updateCategory');
+
+        Category::select('*')
+            ->where('key_id', $input['key_id'])
+            ->delete();
+        
+        Category::create($input);
+
+        return redirect()->route('key.show', ['key' => $input['key_id']]);
+    }
+
+    /**
+     * Update a key's category.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateCategory(Request $request)
+    {
+        $input = $request->all();
+        
+        Validator::make($input, [
+            'user_id' => ['required'],
+            'key_id' => ['required'],
+            'name' => ['required', 'string', 'max:255']
+        ])->validateWithBag('updateCategory');
+
+        Category::select('*')
+            ->where('key_id', $input['key_id'])
+            ->delete();
+        
+        Category::create($input);
+
+        return redirect()->route('key.show', ['key' => $input['key_id']]);
+    }
+
+    /**
+     * Get the categories for a user.
+     *
+     * @return array
+     */
+    private function categories()
+    {
+        $user = auth()->user();
+
+        return Category::select('name')->where('user_id', $user->id)->groupby('name')->get();
+    }
+
+    /**
+     * Get the keys for a category.
+     *
+     * @param String $cat
+     * @return array
+     */
+    private function categoryKeys(String $cat)
+    {
+        $user = auth()->user();
+
+        $categoryKeys = Category::where('user_id', $user->id)->where('name', $cat)->get();
+
+        return Key::whereIn('id', $categoryKeys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))->get();
+    }
+
+    /**
+     * Get the keys for all categories.
+     *
+     * @return array
+     */
+    private function allCategoryKeys()
+    {
+        $user = auth()->user();
+
+        $categoryKeys = Category::where('user_id', $user->id)->get();
+
+        return Key::whereIn('id', $categoryKeys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))->get();
+    }
+
+    /**
+     * Get the allowed personal, public, and shared keys for the user that are not in a category.
      *
      * @return array
      */
@@ -250,11 +401,13 @@ class KeyController extends Controller
     {
         $user = auth()->user();
 
-        $skeys = SharedKey::select('*')->where('shared_email', '=', $user->email)->get();
+        $sharedKeys = SharedKey::select('*')->where('shared_email', '=', $user->email)->get();
+        $categoryKeys = Category::where('user_id', $user->id)->get();
         
         return Key::where('user_id', $user->id)
+            ->whereNotIn('id', $categoryKeys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))
             ->orWhere('public', true)
-            ->orWhereIn('id', $skeys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))
+            ->orWhereIn('id', $sharedKeys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))
             ->get();
     }
 
@@ -361,6 +514,28 @@ class KeyController extends Controller
                 $shared_key,
                 'shared_email',
                 __('This user already shares this key.')
+            );
+        };
+    }
+
+    /**
+     * Ensure that the category doesn't already exist.
+     *
+     * @param  mixed  $input
+     * @return \Closure
+     */
+    protected function ensureCategoryNotExisting(mixed $input)
+    {
+        $category = Category::select('*')
+            ->where('user_id', $input['user_id'])
+            ->where('name', $input['name'])
+            ->exists();
+
+        return function ($validator) use ($category) {
+            $validator->errors()->addIf(
+                $category,
+                'name',
+                __('This category already exists.')
             );
         };
     }

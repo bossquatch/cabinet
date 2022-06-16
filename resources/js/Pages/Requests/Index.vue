@@ -47,7 +47,7 @@
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                         {{ request.user_name }}
                                                     </td>
-                                                    <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                    <td class="px-6 py-4 text-sm text-gray-500 max-w-md">
                                                         {{ request.purpose }}
                                                     </td>
                                                     <td class="flex justify-between px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
