@@ -12,7 +12,7 @@
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="hidden">
             <div>
                 <jet-label for="email" value="Email" />
                 <jet-input id="email" type="email" class="block w-full mt-1" v-model="form.email" required autofocus />
@@ -41,6 +41,10 @@
             </div>
         </form>
 
+        <div class="text-lg font-semibold text-center text-gray-600">
+            The Polk County Cabinet provides an elegant, versatile way to securely transfer files and keys to other teams and employess within the organization.
+        </div>
+
         <div class="mt-6">
             <div class="relative">
                 <div class="absolute inset-0 flex items-center">
@@ -48,14 +52,15 @@
                 </div>
                 <div class="relative flex justify-center text-sm">
                     <span class="px-2 text-gray-500 bg-white">
-                    Or continue with
+                        Continue with
                     </span>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 gap-3 mt-6">
                 <div class="col-span-1">
-                    <a :href="route('oracle-idcs.login')" class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
+                    <!--<a :href="route('oracle-idcs.login')" class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">-->
+                    <a :href="route('oracle-idcs.login')" class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-100 transition duration-300 bg-indigo-700 border border-transparent rounded-md shadow-sm hover:bg-indigo-500 hover:text-white">
                         <span>Sign in with Polk One</span>
 
                         <!--
