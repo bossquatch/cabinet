@@ -19,11 +19,13 @@
                                     &nbsp;
                                     on
                                     &nbsp;
-                                    <span class="text-indigo-500" v-text="log.disk" />
+                                    <!--<span class="text-indigo-500" v-text="log.disk" />-->
+                                    <custom-nav-link :href="route('log.disk', log.diskid)" class="text-indigo-500 hover:text-indigo-900">{{ log.disk }}</custom-nav-link>
                                     &nbsp;
                                     by
                                     &nbsp;
-                                    <span class="text-indigo-500" v-text="log.user" />
+                                    <!--<span class="text-indigo-500" v-text="log.user" />-->
+                                    <custom-nav-link :href="route('log.user', log.userid)" class="text-indigo-500 hover:text-indigo-900">{{ log.user }}</custom-nav-link>
                                 </p>
                             </div>
                             <div class="text-sm text-right text-gray-500 whitespace-nowrap">
@@ -39,6 +41,7 @@
 
 <script>
     import { defineComponent } from 'vue'
+    import CustomNavLink from '@/BuildingBlocks/NavLink'
     import Download from '@/HeroIcons/Download.vue'
     import Duplicate from '@/HeroIcons/Duplicate.vue'
     import Trash from '@/HeroIcons/Trash.vue'
@@ -49,6 +52,7 @@
         props: ['logs'],
 
         components: {
+            CustomNavLink,
             Download,
             Duplicate,
             Trash,

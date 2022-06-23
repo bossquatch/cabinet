@@ -219,6 +219,14 @@ Route::get('/log', [DiskLogController::class, 'index'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('log.index');
 
+Route::get('/log/disk/{disk}', [DiskLogController::class, 'disk'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('log.disk');
+
+Route::get('/log/user/{user}', [DiskLogController::class, 'user'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('log.user');
+
 /*
 Route::get('/test', function () {
     phpinfo();
