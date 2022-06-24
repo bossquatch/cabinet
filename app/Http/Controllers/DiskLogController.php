@@ -8,6 +8,7 @@ use App\Models\DiskLog;
 use App\Models\Disk;
 use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class DiskLogController extends Controller
 {
@@ -53,6 +54,110 @@ class DiskLogController extends Controller
             'title' => $user->name
             //'types' => config('logging.disk.types'),
         ]);
+    }
+
+    public function analytics()
+    {
+        /** Analytics List
+         *      [*] Activity amount over last 30 days
+         *      [*] Activity percentage day of week
+         *      [*] Counts per activity type
+         *      [*] Disks with most activity
+         *      [*] Users with most activity
+         */
+        $logs = DiskLog::get();
+
+        $recent_activity = $this->recentActivity($logs);
+        $dow_activity = $this->dayOfWeekActivity($logs);
+        $activity_type = $this->typesOfActivity($logs);
+        $disk_activity = $this->diskActivity($logs);
+        $user_activity = $this->userActivity($logs);
+
+        return Inertia::render('Logs/Analytics', [
+            'recent_activity' => $recent_activity,
+            'dow_activity' => $dow_activity,
+            'activity_type' => $activity_type,
+            'disk_activity' => $disk_activity,
+            'user_activity' => $user_activity,
+        ]);
+    }
+
+    private function recentActivity($logs)
+    {
+        $return = [];
+
+        $period = CarbonPeriod::create(Carbon::now()->subDays(29), '1 day', Carbon::now());
+        foreach($period as $date) {
+            $date_logs = $logs->filter(function($value, $key) use ($date) {
+                return Carbon::parse($value->created_at)->isSameDay($date);
+            });
+            $return['labels'][] = $date->format('m-d');
+            $return['data'][] = $date_logs->count();
+        }
+
+        return $return;
+    }
+
+    private function dayOfWeekActivity($logs)
+    {
+        $return = [];
+
+        $return = [
+            'labels' => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+            'data' => [0, 0, 0, 0, 0, 0, 0],
+            'colors' => ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'cyan']
+        ];
+        foreach($logs as $log) {
+            $date = Carbon::parse($log->created_at);
+            $return['data'][$date->dayOfWeek]++;
+        }
+
+        return $return;
+    }
+
+    private function typesOfActivity($logs)
+    {
+        $return = [];
+        $types = collect(config('logging.disk.types'));
+
+        $activity_type_raw = $logs->groupBy('type');
+        foreach($activity_type_raw as $typename => $type_logs) {
+            $return['labels'][] = strtoupper($typename);
+            $return['data'][] = $type_logs->count();
+            $return['colors'][] = $types->where('name', $typename)->first()['color_class'];
+        }
+
+        return $return;
+    }
+
+    private function diskActivity($logs)
+    {
+        $return = [];
+        $disks = Disk::get();
+
+        $disk_activity_raw = $logs->groupBy('disk_id');
+        foreach($disk_activity_raw as $disk_id => $disk_logs) {
+            $name = $disks->where('id', $disk_id)->first()->name;
+            $return['labels'][] = $name;
+            $return['data'][] = $disk_logs->count();
+        }
+
+        return $return;
+    }
+
+    private function userActivity($logs)
+    {
+        $return = [];
+        $users = User::get();
+
+        $user_activity_raw = $logs->groupBy('user_id');
+        foreach($user_activity_raw as $user_id => $user_logs) {
+            $name = $users->where('id', $user_id)->first()->name;
+            $return['labels'][] = $name;
+            $return['data'][] = $user_logs->count();
+        }
+
+        return $return;
     }
 
     private function logTransform($log)

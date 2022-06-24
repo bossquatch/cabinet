@@ -10,6 +10,7 @@
             </h2>
 
             <custom-nav-link v-if="title" :href="route('log.index')" class="ml-3 text-indigo-500 hover:text-indigo-900">(All Logs)</custom-nav-link>
+            <custom-nav-link v-else :href="route('log.analytics')" class="ml-3 text-indigo-500 hover:text-indigo-900">(Analytics)</custom-nav-link>
         </template>
 
         <div>

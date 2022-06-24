@@ -227,6 +227,10 @@ Route::get('/log/user/{user}', [DiskLogController::class, 'user'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('log.user');
 
+Route::get('/log/analytics', [DiskLogController::class, 'analytics'])
+    ->middleware(['auth:sanctum', 'verified'])
+    ->name('log.analytics');
+
 /*
 Route::get('/test', function () {
     phpinfo();
