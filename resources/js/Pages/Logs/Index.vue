@@ -1,9 +1,16 @@
 <template>
     <app-layout title="Disk Logs">
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+            <h2 class="inline text-xl font-semibold leading-tight text-gray-800">
                 Disk Logs
+
+                <template v-if="title">
+                    - {{ title }}
+                </template>
             </h2>
+
+            <custom-nav-link v-if="title" :href="route('log.index')" class="ml-3 text-indigo-500 hover:text-indigo-900">(All Logs)</custom-nav-link>
+            <custom-nav-link v-else :href="route('log.analytics')" class="ml-3 text-indigo-500 hover:text-indigo-900">(Analytics)</custom-nav-link>
         </template>
 
         <div>
@@ -23,14 +30,16 @@
 <script>
     import { defineComponent } from 'vue'
     import AppLayout from '@/Layouts/AppLayout.vue'
+    import CustomNavLink from '@/BuildingBlocks/NavLink'
     import Feed from '@/Pages/Logs/Partials/Feed.vue'
     import Pagination from '@/Pages/Logs/Partials/Pagination.vue'
 
     export default defineComponent({
-        props: ['logs'],
+        props: ['logs', 'title'],
 
         components: {
             AppLayout,
+            CustomNavLink,
             Feed,
             Pagination,
         },
