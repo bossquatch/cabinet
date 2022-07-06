@@ -26,7 +26,7 @@
             </div>
         </template>
 
-        <template #actions>
+        <template #actions v-if="$page.props.user.id == skey.owner_id || hasAdminAccess">
             <jet-action-message :on="form.recentlySuccessful" class="mr-3">
                 Saved.
             </jet-action-message>

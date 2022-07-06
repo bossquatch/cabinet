@@ -1,49 +1,47 @@
 <template>
-    <div v-if="$page.props.user.id == skey.user_id">
-        <jet-section-border />
-        <jet-action-section>
-            <template #title>
-                Update Category
-            </template>
+    <jet-section-border />
+    <jet-action-section>
+        <template #title>
+            Update Category
+        </template>
 
-            <template #description>
-                Change this key's category or remove it from its current category.
-            </template>
+        <template #description>
+            Change this key's category or remove it from its current category.
+        </template>
 
-            <template #content>
-                <div class="space-y-6">
-                    <div class="flex items-center justify-between">
-                        <div class="w-max ml-4">
-                            <jet-label for="name" value="New Category" />
-                            <jet-input id="name" type="text" class="block w-full mt-1" v-model="form.name" autofocus />
-                            <jet-input-error :message="form.errors.name" class="mt-2" />
-                        </div>
-                        <jet-button class="self-end" @click="newCategory(form.name)">
-                            Change
-                        </jet-button>
+        <template #content>
+            <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <div class="w-max ml-4">
+                        <jet-label for="name" value="New Category" />
+                        <jet-input id="name" type="text" class="block w-full mt-1" v-model="form.name" autofocus />
+                        <jet-input-error :message="form.errors.name" class="mt-2" />
                     </div>
-                    <div class="flex items-center justify-between" v-for="category in categories" :key="category">
-                        <div class="flex items-center">
-                            <div class="w-max ml-4">{{ category.name }}</div>
-                        </div>
-                        <div class="flex items-center">
-                            <div v-if="currentCategory !== null">
-                                <jet-danger-button v-if="currentCategory.name === category.name" @click="removeCategory">
-                                    Remove
-                                </jet-danger-button>
-                                <jet-button v-else @click="changeCategory(category.name)">
-                                    Change
-                                </jet-button>
-                            </div>
+                    <jet-button class="self-end" @click="newCategory(form.name)">
+                        Change
+                    </jet-button>
+                </div>
+                <div class="flex items-center justify-between" v-for="category in categories" :key="category">
+                    <div class="flex items-center">
+                        <div class="w-max ml-4">{{ category.name }}</div>
+                    </div>
+                    <div class="flex items-center">
+                        <div v-if="currentCategory !== null">
+                            <jet-danger-button v-if="currentCategory.name === category.name" @click="removeCategory">
+                                Remove
+                            </jet-danger-button>
                             <jet-button v-else @click="changeCategory(category.name)">
                                 Change
                             </jet-button>
                         </div>
+                        <jet-button v-else @click="changeCategory(category.name)">
+                            Change
+                        </jet-button>
                     </div>
                 </div>
-            </template>
-        </jet-action-section>
-    </div>
+            </div>
+        </template>
+    </jet-action-section>
 </template>
 
 <script>

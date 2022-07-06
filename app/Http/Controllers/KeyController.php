@@ -127,10 +127,17 @@ class KeyController extends Controller
      */
     public function show(Key $key)
     {   
+        $user = auth()->user();
         $shared_keys = SharedKey::where('key_id', '=', $key->id)->get();
         $shared_users = User::whereIn('email', $shared_keys->map(function ($k) { return ['email' => $k->shared_email]; }))->get();
         $currentCategory = Category::select('name')->where('key_id', $key->id)->first();
-
+        $keyOwner = User::where('id', $key->owner_id)->first();
+        $adminAccess = KeyAccessRequest::where('admin_id', $user->id)->where('user_email', $keyOwner->email)->exists();
+        $isShared = SharedKey::select('*')
+            ->where('key_id', $key->id)
+            ->where('shared_email', $user->email)
+            ->exists();
+        
         try {
             $key->value = Crypt::decryptString($key->value);
         } catch (DecryptException $e) {
@@ -145,7 +152,9 @@ class KeyController extends Controller
                     'name' => $cat->name
                 ];
             }),
-            'currentCategory' => $currentCategory
+            'currentCategory' => $currentCategory,
+            'hasAdminAccess' => $adminAccess,
+            'isSharedKey' => $isShared
         ]);
     }
 
@@ -257,6 +266,12 @@ class KeyController extends Controller
             ->firstorfail()
             ->delete();
 
+        Category::select('*')
+            ->where('user_id', $user->id)
+            ->where('key_id', $key->id)
+            ->firstorfail()
+            ->delete();
+
         return redirect()->route('key.show', ['key' => $key->id]);
     }
 
@@ -277,6 +292,10 @@ class KeyController extends Controller
             ->where('key_id', '=', $key->id)
             ->delete();
 
+        Category::select('*')
+            ->where('key_id', $key->id)
+            ->delete();
+
         return redirect()->route('key.index');
     }
 
@@ -290,8 +309,10 @@ class KeyController extends Controller
     public function removeCategory(Request $request, Key $key)
     {
         $input = $request->all();
+        $user = auth()->user();
 
         Category::select('*')
+            ->where('user_id' , $user->id)
             ->where('key_id', $key->id)
             ->firstorfail()
             ->delete();
@@ -315,7 +336,7 @@ class KeyController extends Controller
             'name' => ['required', 'string', 'max:255']
         ])->after(
             $this->ensureCategoryNotExisting($input)
-        )->validateWithBag('updateCategory');
+        )->validateWithBag('createCategory');
 
         Category::select('*')
             ->where('key_id', $input['key_id'])
@@ -407,7 +428,9 @@ class KeyController extends Controller
         return Key::where('user_id', $user->id)
             ->whereNotIn('id', $categoryKeys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))
             ->orWhere('public', true)
+            ->whereNotIn('id', $categoryKeys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))
             ->orWhereIn('id', $sharedKeys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))
+            ->whereNotIn('id', $categoryKeys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))
             ->get();
     }
 

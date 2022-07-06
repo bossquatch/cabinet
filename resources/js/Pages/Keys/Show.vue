@@ -10,13 +10,13 @@
             <div class="py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <update-key-form :skey="skey" />
 
-                <update-category-form :skey="skey" :categories="categories" :currentCategory="currentCategory" />
+                <update-category-form v-if="$page.props.user.id == skey.owner_id || isSharedKey || skey.public" :skey="skey" :categories="categories" :currentCategory="currentCategory" />
                 
-                <share-key-form v-if="skey.public == false" :skey="skey" />
+                <share-key-form v-if="skey.public == false && ($page.props.user.id == skey.owner_id || hasAdminAccess)" :skey="skey" />
 
-                <revoke-key-form v-if="skey.public == false" :skey="skey" :shared_users="shared_users" />
+                <revoke-key-form v-if="skey.public == false && ($page.props.user.id == skey.owner_id || hasAdminAccess)" :skey="skey" :shared_users="shared_users" />
 
-                <delete-key-form :skey="skey" />
+                <delete-key-form v-if="$page.props.user.id == skey.owner_id || hasAdminAccess" :skey="skey" />
             </div>
         </div>
     </app-layout>
@@ -33,7 +33,7 @@
     import DeleteKeyForm from '@/Pages/Keys/Partials/DeleteKeyForm.vue'
 
     export default defineComponent({
-        props: ['skey', 'shared_users', 'categories', 'currentCategory'],
+        props: ['skey', 'shared_users', 'categories', 'currentCategory', 'hasAdminAccess', 'isSharedKey'],
 
         components: {
             AppLayout,
