@@ -8,7 +8,7 @@
 
         <div>
             <div class="py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <update-key-form :skey="skey" />
+                <update-key-form :skey="skey" :hasAdminAccess="hasAdminAccess" />
 
                 <update-category-form v-if="$page.props.user.id == skey.owner_id || isSharedKey || skey.public" :skey="skey" :categories="categories" :currentCategory="currentCategory" />
                 

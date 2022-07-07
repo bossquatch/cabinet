@@ -185,6 +185,13 @@ class KeyController extends Controller
                 ->where('key_id', '=', $key->id)
                 ->delete();
         }
+        else
+        {
+            Category::select('*')
+                ->where('key_id', $key->id)
+                ->where('user_id', '!=', $key->owner_id)
+                ->delete();
+        }
 
         return back(303);
     }

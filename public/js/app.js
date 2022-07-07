@@ -22022,7 +22022,7 @@ __webpack_require__.r(__webpack_exports__);
     JetLabel: _Jetstream_Label_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
     CustomCheckbox: _BuildingBlocks_Checkbox_vue__WEBPACK_IMPORTED_MODULE_9__["default"]
   },
-  props: ['skey'],
+  props: ['skey', 'hasAdminAccess'],
   data: function data() {
     return {
       form: this.$inertia.form({
@@ -31021,17 +31021,32 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_label, {
         "for": "description",
         value: "Key Description"
-      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_input, {
+      }), _ctx.$page.props.user.id == _ctx.skey.owner_id || _ctx.hasAdminAccess ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_jet_input, {
+        key: 0,
         id: "description",
         type: "text",
         "class": "block w-full mt-1",
         modelValue: _ctx.form.description,
         "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
           return _ctx.form.description = $event;
-        })
+        }),
+        autofocus: ""
       }, null, 8
       /* PROPS */
-      , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_input_error, {
+      , ["modelValue"])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_jet_input, {
+        key: 1,
+        id: "description",
+        type: "text",
+        "class": "block w-full mt-1",
+        modelValue: _ctx.form.description,
+        "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+          return _ctx.form.description = $event;
+        }),
+        autofocus: "",
+        readonly: ""
+      }, null, 8
+      /* PROPS */
+      , ["modelValue"])), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_input_error, {
         message: _ctx.form.errors.description,
         "class": "mt-2"
       }, null, 8
@@ -31039,24 +31054,39 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       , ["message"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_label, {
         "for": "value",
         value: "Value"
-      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_input, {
+      }), _ctx.$page.props.user.id == _ctx.skey.owner_id || _ctx.hasAdminAccess ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_jet_input, {
+        key: 0,
         id: "value",
         type: "text",
         "class": "block w-full mt-1",
         modelValue: _ctx.form.value,
-        "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+        "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
           return _ctx.form.value = $event;
-        })
+        }),
+        autofocus: ""
       }, null, 8
       /* PROPS */
-      , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_input_error, {
+      , ["modelValue"])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_jet_input, {
+        key: 1,
+        id: "value",
+        type: "text",
+        "class": "block w-full mt-1",
+        modelValue: _ctx.form.value,
+        "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+          return _ctx.form.value = $event;
+        }),
+        autofocus: "",
+        readonly: ""
+      }, null, 8
+      /* PROPS */
+      , ["modelValue"])), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_input_error, {
         message: _ctx.form.errors.value
       }, null, 8
       /* PROPS */
       , ["message"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_custom_checkbox, {
         name: 'Public',
         modelValue: _ctx.form["public"],
-        "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+        "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
           return _ctx.form["public"] = $event;
         })
       }, null, 8
@@ -31097,7 +31127,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* PROPS */
       , ["class", "disabled"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Public Key Confirmation Modal "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_confirmation_modal, {
         show: _ctx.confirmingKeyUpdate,
-        onClose: _cache[4] || (_cache[4] = function ($event) {
+        onClose: _cache[6] || (_cache[6] = function ($event) {
           return _ctx.confirmingKeyUpdate = false;
         })
       }, {
@@ -31109,7 +31139,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }),
         footer: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_secondary_button, {
-            onClick: _cache[3] || (_cache[3] = function ($event) {
+            onClick: _cache[5] || (_cache[5] = function ($event) {
               return _ctx.confirmingKeyUpdate = false;
             })
           }, {
@@ -31194,10 +31224,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_update_key_form, {
-        skey: _ctx.skey
+        skey: _ctx.skey,
+        hasAdminAccess: _ctx.hasAdminAccess
       }, null, 8
       /* PROPS */
-      , ["skey"]), _ctx.$page.props.user.id == _ctx.skey.owner_id || _ctx.isSharedKey || _ctx.skey["public"] ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_update_category_form, {
+      , ["skey", "hasAdminAccess"]), _ctx.$page.props.user.id == _ctx.skey.owner_id || _ctx.isSharedKey || _ctx.skey["public"] ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_update_category_form, {
         key: 0,
         skey: _ctx.skey,
         categories: _ctx.categories,
