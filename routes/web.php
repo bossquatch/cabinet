@@ -13,6 +13,8 @@ use App\Http\Controllers\DiskLogController;
 use App\Http\Controllers\DiskDriverFieldController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\KeyController;
+use App\Http\Controllers\SharedKeyController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\KeyAccessRequestController;
 use App\Http\Controllers\Auth\OracleIDCSSocialiteController;
 
@@ -83,29 +85,25 @@ Route::put('/key/{key}', [KeyController::class, 'update'])
     ->middleware(['auth:sanctum', 'verified'])
     ->name('key.update');
 
-Route::post('/key/share', [KeyController::class, 'userShare'])
+Route::post('/key/share', [SharedKeyController::class, 'userShare'])
     ->middleware(['auth:sanctum', 'verified'])
-    ->name('key.userShare');
+    ->name('sharedkey.userShare');
 
-Route::post('/key/createCategory', [KeyController::class, 'createCategory'])
+Route::post('/key/updateCategory', [CategoryController::class, 'updateCategory'])
     ->middleware(['auth:sanctum', 'verified'])
-    ->name('key.createCategory');
+    ->name('category.updateCategory');
 
-    Route::post('/key/updateCategory', [KeyController::class, 'updateCategory'])
+Route::post('/key/{team}', [SharedKeyController::class, 'teamShare'])
     ->middleware(['auth:sanctum', 'verified'])
-    ->name('key.updateCategory');
+    ->name('sharedkey.teamShare');
 
-Route::post('/key/{team}', [KeyController::class, 'teamShare'])
+Route::delete('/key/category/{key}', [CategoryController::class, 'removeCategory'])
     ->middleware(['auth:sanctum', 'verified'])
-    ->name('key.teamShare');
+    ->name('category.removeCategory');
 
-Route::delete('/key/category/{key}', [KeyController::class, 'removeCategory'])
+Route::delete('/key/{key}/{user}', [SharedKeyController::class, 'revoke'])
     ->middleware(['auth:sanctum', 'verified'])
-    ->name('key.removeCategory');
-
-Route::delete('/key/{key}/{user}', [KeyController::class, 'revoke'])
-    ->middleware(['auth:sanctum', 'verified'])
-    ->name('key.revoke');
+    ->name('sharedkey.revoke');
 
 Route::delete('/key/{key}', [KeyController::class, 'delete'])
     ->middleware(['auth:sanctum', 'verified'])

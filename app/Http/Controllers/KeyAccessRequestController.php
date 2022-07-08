@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Key;
-use App\Models\SharedKey;
 use App\Models\User;
-use App\Models\Team;
 use App\Models\KeyAccessRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -78,23 +76,20 @@ class KeyAccessRequestController extends Controller
     }
 
     /**
-     * Remove a resource in storage.
+     * Remove a resource from storage.
      *
      * @param \App\Models\KeyAccessRequest $req
      * @return \Illuminate\Http\Response
      */
     public function delete(KeyAccessRequest $req)
     {   
-        KeyAccessRequest::select('*')
-            ->where('id', '=', $req->id)
-            ->firstorfail()
-            ->delete();
+        KeyAccessRequest::where('id', $req->id)->firstorfail()->delete();
 
         return redirect()->route('request.index');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Approve the request and update the time approved.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param \App\Models\KeyAccessRequest $req
@@ -111,9 +106,9 @@ class KeyAccessRequestController extends Controller
     }
 
     /**
-     * Check if admin access to a user's keys is still available.
+     * Update admin access to a user's keys.
      */
-    private function adminKeyAccess()
+    public function adminKeyAccess()
     {
         $requests = KeyAccessRequest::where('approved', true)->get();
 
@@ -121,15 +116,11 @@ class KeyAccessRequestController extends Controller
         {
             $approvedTime = Carbon::createFromFormat('Y-m-d H:s:i', KeyAccessRequest::where('id', $request->id)->pluck('approved_at')->first());
             $currentTime = Carbon::now();
-
             $diff_in_hours = $approvedTime->diffInHours($currentTime);
 
             if ($diff_in_hours > 24)
             {
-                KeyAccessRequest::select('*')
-                    ->where('id', '=', $request->id)
-                    ->firstorfail()
-                    ->delete();
+                KeyAccessRequest::where('id', $request->id)->firstorfail()->delete();
             }
         }
 
@@ -144,9 +135,7 @@ class KeyAccessRequestController extends Controller
      */
     protected function ensureEmailExists(mixed $input)
     {
-        $email = User::select('*')
-            ->where('email', '=', $input['user_email'])
-            ->exists();
+        $email = User::where('email', $input['user_email'])->exists();
 
         return function ($validator) use ($email) {
             $validator->errors()->addIf(

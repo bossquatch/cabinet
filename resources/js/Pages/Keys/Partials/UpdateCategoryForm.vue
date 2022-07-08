@@ -17,7 +17,7 @@
                         <jet-input id="name" type="text" class="block w-full mt-1" v-model="form.name" autofocus />
                         <jet-input-error :message="form.errors.name" class="mt-2" />
                     </div>
-                    <jet-button class="self-end" @click="newCategory(form.name)">
+                    <jet-button class="self-end" @click="changeCategory(form.name)">
                         Change
                     </jet-button>
                 </div>
@@ -87,13 +87,8 @@
                 this.updateCategory()
             },
 
-            newCategory($catName) {
-                this.form.name = $catName
-                this.createCategory()
-            },
-
             removeCategory() {
-                this.form.delete(route('key.removeCategory', this.skey), {
+                this.form.delete(route('category.removeCategory', this.skey), {
                     preserveScroll: true,
                     preserveState: true
                 });
@@ -101,22 +96,13 @@
             },
 
             updateCategory() {
-                this.form.post(route('key.updateCategory'), {
+                this.form.post(route('category.updateCategory'), {
                     errorBag: 'updateCategory',
                     preserveScroll: true,
                     preserveState: true
                 });
                 this.form.name = ''
-            },
-
-            createCategory() {
-                this.form.post(route('key.createCategory'), {
-                    errorBag: 'createCategory',
-                    preserveScroll: true,
-                    preserveState: true
-                });
-                this.form.name = ''
             }
-        },
+        }
     })
 </script>

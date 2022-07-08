@@ -21804,11 +21804,10 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    revokeKey: function revokeKey(user) {
+    revokeKey: function revokeKey() {
       var _this = this;
 
-      this.form["delete"](route('key.revoke', [this.skey, this.userBeingRemoved]), {
-        errorBag: 'revokeKey',
+      this.form["delete"](route('sharedkey.revoke', [this.skey, this.userBeingRemoved]), {
         preserveScroll: true,
         preserveState: true,
         onSuccess: function onSuccess() {
@@ -21873,13 +21872,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     shareUserKey: function shareUserKey() {
-      this.userForm.post(route('key.userShare'), {
+      this.userForm.post(route('sharedkey.userShare'), {
         errorBag: 'shareUserKey',
         preserveScroll: true
       });
     },
     shareTeamKey: function shareTeamKey() {
-      this.teamForm.post(route('key.teamShare', this.$page.props.user.current_team), {
+      this.teamForm.post(route('sharedkey.teamShare', this.$page.props.user.current_team), {
         errorBag: 'shareTeamKey',
         preserveScroll: true
       });
@@ -21947,28 +21946,16 @@ __webpack_require__.r(__webpack_exports__);
       this.form.name = $catName;
       this.updateCategory();
     },
-    newCategory: function newCategory($catName) {
-      this.form.name = $catName;
-      this.createCategory();
-    },
     removeCategory: function removeCategory() {
-      this.form["delete"](route('key.removeCategory', this.skey), {
+      this.form["delete"](route('category.removeCategory', this.skey), {
         preserveScroll: true,
         preserveState: true
       });
       this.form.name = '';
     },
     updateCategory: function updateCategory() {
-      this.form.post(route('key.updateCategory'), {
+      this.form.post(route('category.updateCategory'), {
         errorBag: 'updateCategory',
-        preserveScroll: true,
-        preserveState: true
-      });
-      this.form.name = '';
-    },
-    createCategory: function createCategory() {
-      this.form.post(route('key.createCategory'), {
-        errorBag: 'createCategory',
         preserveScroll: true,
         preserveState: true
       });
@@ -30879,7 +30866,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       , ["message"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_button, {
         "class": "self-end",
         onClick: _cache[1] || (_cache[1] = function ($event) {
-          return _ctx.newCategory(_ctx.form.name);
+          return _ctx.changeCategory(_ctx.form.name);
         })
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -32841,7 +32828,12 @@ var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 }, " Purpose "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   scope: "col",
   "class": "px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-}, " Status ")])], -1
+}, " Status "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+  scope: "col",
+  "class": "relative px-6 py-3"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "sr-only"
+}, "Action")])])], -1
 /* HOISTED */
 );
 
@@ -32855,7 +32847,7 @@ var _hoisted_14 = {
   "class": "px-6 py-4 text-sm text-gray-500 max-w-md"
 };
 var _hoisted_15 = {
-  "class": "flex justify-between px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
+  "class": "px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
 };
 var _hoisted_16 = {
   key: 0,
@@ -32942,20 +32934,20 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* TEXT */
         ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(request.purpose), 1
         /* TEXT */
-        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_15, [request.approved ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_16, " Approved ")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_17, " Pending ")), _ctx.$page.props.user.id == request.admin_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_trash_icon, {
-          key: 2,
+        ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_15, [request.approved ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_16, " Approved ")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_17, " Pending "))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [_ctx.$page.props.user.id == request.admin_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_trash_icon, {
+          key: 0,
           onClick: function onClick($event) {
             return _ctx.deleteConfirmation(request);
           },
-          "class": "cursor-pointer text-red-600 hover:text-red-900"
+          "class": "place-content-end cursor-pointer text-red-600 hover:text-red-900"
         }, null, 8
         /* PROPS */
         , ["onClick"])) : !request.approved ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_check_icon, {
-          key: 3,
+          key: 1,
           onClick: function onClick($event) {
             return _ctx.approveConfirmation(request);
           },
-          "class": "cursor-pointer w-6 text-green-600 hover:text-green-900"
+          "class": "place-content-end cursor-pointer w-6 text-green-600 hover:text-green-900"
         }, null, 8
         /* PROPS */
         , ["onClick"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 2
