@@ -46,7 +46,7 @@ class CategoryController extends Controller
             'name' => ['required', 'string', 'max:255']
         ])->validateWithBag('updateCategory');
 
-        Category::where('key_id', $input['key_id'])->delete();
+        Category::where('user_id', $input['user_id'])->where('key_id', $input['key_id'])->delete();
         
         Category::create($input);
 
@@ -65,7 +65,7 @@ class CategoryController extends Controller
         $input = $request->all();
         $user = auth()->user();
 
-        Category::where('user_id' , $user->id)->where('key_id', $key->id)->firstorfail()->delete();
+        Category::where('user_id', $user->id)->where('key_id', $key->id)->delete();
 
         return redirect()->route('key.show', ['key' => $key->id]);
     }

@@ -130,7 +130,7 @@ class KeyController extends Controller
         $user = auth()->user();
         $shared_keys = SharedKey::where('key_id', '=', $key->id)->get();
         $shared_users = User::whereIn('email', $shared_keys->map(function ($k) { return ['email' => $k->shared_email]; }))->get();
-        $currentCategory = Category::select('name')->where('key_id', $key->id)->first();
+        $currentCategory = Category::select('name')->where('user_id', $user->id)->where('key_id', $key->id)->first();
         $keyOwner = User::where('id', $key->owner_id)->first();
         $hasAdminAccess = KeyAccessRequest::where('admin_id', $user->id)->where('user_email', $keyOwner->email)->exists();
         $isSharedKey = SharedKey::where('key_id', $key->id)->where('shared_email', $user->email)->exists();
