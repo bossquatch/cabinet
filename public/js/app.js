@@ -21590,7 +21590,6 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       form: this.$inertia.form({
-        user_id: this.$page.props.user.id,
         owner_id: this.$page.props.user.id,
         description: '',
         value: '',
@@ -32862,7 +32861,7 @@ var _hoisted_18 = {
 };
 
 var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-  colspan: "4",
+  colspan: "5",
   "class": "px-6 py-4 text-sm font-medium text-red-900 whitespace-nowrap"
 }, " There are currently no key access requests. ", -1
 /* HOISTED */

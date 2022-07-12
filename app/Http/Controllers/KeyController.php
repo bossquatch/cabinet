@@ -34,7 +34,6 @@ class KeyController extends Controller
                     'keys' => $this->categoryKeys($cat->name)->map(function ($key) {
                         return [
                             'id' => $key->id,
-                            'user_id' => $key->user_id,
                             'owner_id' => $key->owner_id,
                             'description' => $key->description,
                             'value' => Crypt::decryptString($key->value),
@@ -48,7 +47,6 @@ class KeyController extends Controller
             'categoryKeys' => $this->allCategoryKeys()->map(function ($key) {
                 return [
                     'id' => $key->id,
-                    'user_id' => $key->user_id,
                     'owner_id' => $key->owner_id,
                     'description' => $key->description,
                     'value' => Crypt::decryptString($key->value),
@@ -60,7 +58,6 @@ class KeyController extends Controller
             'keys' => $this->allowedKeys()->map(function ($key) {
                 return [
                     'id' => $key->id,
-                    'user_id' => $key->user_id,
                     'owner_id' => $key->owner_id,
                     'description' => $key->description,
                     'value' => Crypt::decryptString($key->value),
@@ -72,7 +69,6 @@ class KeyController extends Controller
             'adminAccessedKeys' => $this->allowedAdminAccessedKeys()->map(function ($key) {
                 return [
                     'id' => $key->id,
-                    'user_id' => $key->user_id,
                     'owner_id' => $key->owner_id,
                     'description' => $key->description,
                     'value' => Crypt::decryptString($key->value),
@@ -105,7 +101,6 @@ class KeyController extends Controller
         $input = $request->all();
 
         Validator::make($input, [
-            'user_id' => ['required'],
             'owner_id' => ['required'],
             'description' => ['required', 'string', 'max:255'],
             'value' => ['required', 'string', 'max:512'],
@@ -132,7 +127,10 @@ class KeyController extends Controller
         $shared_users = User::whereIn('email', $shared_keys->map(function ($k) { return ['email' => $k->shared_email]; }))->get();
         $currentCategory = Category::select('name')->where('user_id', $user->id)->where('key_id', $key->id)->first();
         $keyOwner = User::where('id', $key->owner_id)->first();
-        $hasAdminAccess = KeyAccessRequest::where('admin_id', $user->id)->where('user_email', $keyOwner->email)->exists();
+        $hasAdminAccess = KeyAccessRequest::where('admin_id', $user->id)
+            ->where('user_email', $keyOwner->email)
+            ->where('approved', true)
+            ->exists();
         $isSharedKey = SharedKey::where('key_id', $key->id)->where('shared_email', $user->email)->exists();
         
         try {
@@ -250,10 +248,10 @@ class KeyController extends Controller
     private function allowedKeys()
     {
         $user = auth()->user();
-        $sharedKeys = SharedKey::select('*')->where('shared_email', '=', $user->email)->get();
+        $sharedKeys = SharedKey::where('shared_email', $user->email)->get();
         $categoryKeys = Category::where('user_id', $user->id)->get();
         
-        return Key::where('user_id', $user->id)
+        return Key::where('owner_id', $user->id)
             ->whereNotIn('id', $categoryKeys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))
             ->orWhere('public', true)
             ->whereNotIn('id', $categoryKeys->map(function ($key) { return ['id' => $key->key_id]; })->pluck('id'))

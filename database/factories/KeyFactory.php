@@ -24,7 +24,6 @@ class KeyFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => User::all()->random()->id,
             'owner_id' => User::all()->random()->id,
             'description' => $this->faker->sentence(),
             'value' => Str::random(10),

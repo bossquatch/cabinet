@@ -84,7 +84,6 @@
         data() {
             return {
                 form: this.$inertia.form({
-                    user_id: this.$page.props.user.id,
                     owner_id: this.$page.props.user.id,
                     description: '',
                     value: '',
