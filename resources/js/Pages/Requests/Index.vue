@@ -36,35 +36,40 @@
                                             <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                                 Status
                                             </th>
+                                            <th scope="col" class="relative px-6 py-3">
+                                                <span class="sr-only">Action</span>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <template v-if="requests.length">
                                             <tr v-for="(request, index) in requests" :key="request" :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
-                                                    <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
-                                                        {{ request.admin_name }}
-                                                    </td>
-                                                    <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                        {{ request.user_name }}
-                                                    </td>
-                                                    <td class="px-6 py-4 text-sm text-gray-500 max-w-md">
-                                                        {{ request.purpose }}
-                                                    </td>
-                                                    <td class="flex justify-between px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                        <div v-if="request.approved" class="text-green-600">
-                                                            Approved
-                                                        </div>
-                                                        <div v-else>
-                                                            Pending
-                                                        </div>
-                                                        <trash-icon v-if="$page.props.user.id == request.admin_id" @click="deleteConfirmation(request)" class="cursor-pointer text-red-600 hover:text-red-900"/>
-                                                        <check-icon v-else-if="!request.approved" @click="approveConfirmation(request)" class="cursor-pointer w-6 text-green-600 hover:text-green-900"/>
-                                                    </td>
-                                                </tr>
+                                                <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                                    {{ request.admin_name }}
+                                                </td>
+                                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                    {{ request.user_name }}
+                                                </td>
+                                                <td class="px-6 py-4 text-sm text-gray-500 max-w-md">
+                                                    {{ request.purpose }}
+                                                </td>
+                                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                    <div v-if="request.approved" class="text-green-600">
+                                                        Approved
+                                                    </div>
+                                                    <div v-else>
+                                                        Pending
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <trash-icon v-if="$page.props.user.id == request.admin_id" @click="deleteConfirmation(request)" class="place-content-end cursor-pointer text-red-600 hover:text-red-900"/>
+                                                    <check-icon v-else-if="!request.approved" @click="approveConfirmation(request)" class="place-content-end cursor-pointer w-6 text-green-600 hover:text-green-900"/>
+                                                </td>
+                                            </tr>
                                         </template>
                                         <template v-else>
                                             <tr class="bg-red-300">
-                                                <td colspan="4" class="px-6 py-4 text-sm font-medium text-red-900 whitespace-nowrap">
+                                                <td colspan="5" class="px-6 py-4 text-sm font-medium text-red-900 whitespace-nowrap">
                                                     There are currently no key access requests.
                                                 </td>
                                             </tr>

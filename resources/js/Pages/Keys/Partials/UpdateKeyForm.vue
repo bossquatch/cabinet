@@ -11,13 +11,15 @@
         <template #form>
             <div class="col-span-6 sm:col-span-4">
                 <jet-label for="description" value="Key Description" />
-                <jet-input id="description" type="text" class="block w-full mt-1" v-model="form.description" />
+                <jet-input v-if="$page.props.user.id == skey.owner_id || hasAdminAccess" id="description" type="text" class="block w-full mt-1" v-model="form.description" autofocus />
+                <jet-input v-else id="description" type="text" class="block w-full mt-1" v-model="form.description" autofocus readonly />
                 <jet-input-error :message="form.errors.description" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
                 <jet-label for="value" value="Value" />
-                <jet-input id="value" type="text" class="block w-full mt-1" v-model="form.value" />
+                <jet-input v-if="$page.props.user.id == skey.owner_id || hasAdminAccess" id="value" type="text" class="block w-full mt-1" v-model="form.value" autofocus />
+                <jet-input v-else id="value" type="text" class="block w-full mt-1" v-model="form.value" autofocus readonly />
                 <jet-input-error :message="form.errors.value" />
             </div>
 
@@ -26,7 +28,7 @@
             </div>
         </template>
 
-        <template #actions>
+        <template #actions v-if="$page.props.user.id == skey.owner_id || hasAdminAccess">
             <jet-action-message :on="form.recentlySuccessful" class="mr-3">
                 Saved.
             </jet-action-message>
@@ -84,7 +86,7 @@
             CustomCheckbox,
         },
 
-        props: ['skey'],
+        props: ['skey', 'hasAdminAccess'],
 
         data() {
             return {

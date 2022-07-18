@@ -90,14 +90,14 @@
 
         methods: {
             shareUserKey() {
-                this.userForm.post(route('key.userShare'), {
+                this.userForm.post(route('sharedkey.userShare'), {
                     errorBag: 'shareUserKey',
                     preserveScroll: true
                 });
             },
 
             shareTeamKey() {
-                this.teamForm.post(route('key.teamShare', this.$page.props.user.current_team), {
+                this.teamForm.post(route('sharedkey.teamShare', this.$page.props.user.current_team), {
                     errorBag: 'shareTeamKey',
                     preserveScroll: true
                 });

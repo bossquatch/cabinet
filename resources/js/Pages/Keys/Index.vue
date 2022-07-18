@@ -18,7 +18,7 @@
         </template>
 
         <div>
-            <key-list :categories="categories" :categoryKeys="categoryKeys" :keys="keys" :searchQuery="keySearchQuery" :hasAdminAccess="false" />
+            <key-list :categories="categories" :categoryKeys="categoryKeys" :keys="keys" :searchQuery="keySearchQuery" />
 
             <div v-if="$page.props.user.is_admin">
                 <jet-section-border class="mx-auto mt-5 max-w-7xl sm:px-6 lg:px-8" />
@@ -35,7 +35,7 @@
                     </div>
                 </div>
 
-                <key-list :categories="''" :categoryKeys="''" :keys="adminAccessedKeys" :searchQuery="adminKeySearchQuery" :hasAdminAccess="true" />
+                <key-list :categories="''" :categoryKeys="''" :keys="adminAccessedKeys" :searchQuery="adminKeySearchQuery" />
             </div>
         </div>
     </app-layout>

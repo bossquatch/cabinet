@@ -38,29 +38,31 @@
                                                     </td>
                                                 </tr>
                                                 <tr v-show="categoryKeysVisible[cat_index]" v-for="(key, index) in keyQuery(category.keys)" :key="key" :class="cat_index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
-                                                    <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                                    <td class="px-6 py-4 text-sm font-medium text-gray-900 max-w-md break-words">
                                                         {{ key.description }}
                                                     </td>
-                                                    <td class="flex px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                        <div :class="key.is_hidden ? 'blur-sm max-w-2xl truncate' : 'max-w-2xl truncate'">
-                                                            {{ key.value }}
+                                                    <td>
+                                                        <div class="flex px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                            <div :class="key.is_hidden ? 'blur-sm max-w-md truncate' : 'max-w-sm truncate'">
+                                                                {{ key.value }}
+                                                            </div>
+                                                            <div v-if="!key.is_hidden" class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="key.is_hidden = true">
+                                                                <show-icon></show-icon>
+                                                            </div>
+                                                            <div v-else class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="key.is_hidden = false">
+                                                                <hide-icon></hide-icon>
+                                                            </div>
+                                                            <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"/>
+                                                            <jet-action-message :on="currentClipboard == key.value" class="ml-2">
+                                                                Copied.
+                                                            </jet-action-message>
                                                         </div>
-                                                        <div v-if="!key.is_hidden" class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="key.is_hidden = true">
-                                                            <show-icon></show-icon>
-                                                        </div>
-                                                        <div v-else class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="key.is_hidden = false">
-                                                            <hide-icon></hide-icon>
-                                                        </div>
-                                                        <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"/>
-                                                        <jet-action-message :on="currentClipboard == key.value" class="ml-2">
-                                                            Copied.
-                                                        </jet-action-message>
                                                     </td>
                                                     <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                         {{ key.public ? "Yes" : "No" }}
                                                     </td>
-                                                    <td class="flex px-6 py-4 text-sm font-medium text-right place-content-end whitespace-nowrap">
-                                                        <custom-nav-link v-if="$page.props.user.id == key.owner_id || hasAdminAccess" :href="key.edit_url" class="text-indigo-600 hover:text-indigo-900">
+                                                    <td>
+                                                        <custom-nav-link :href="key.edit_url" class="flex px-6 py-4 place-content-end text-indigo-600 hover:text-indigo-900">
                                                             <edit-icon />
                                                         </custom-nav-link>
                                                     </td>
@@ -70,29 +72,31 @@
                                     </template>
                                     <template v-if="keys.length && keyQuery(keys).length">
                                         <tr v-for="(key, index) in keyQuery(keys)" :key="key" :class="(index + categories.length) % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
-                                            <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                            <td class="px-6 py-4 text-sm font-medium text-gray-900 max-w-md break-words">
                                                 {{ key.description }}
                                             </td>
-                                            <td class="flex px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                <div :class="key.is_hidden ? 'blur-sm max-w-2xl truncate' : 'max-w-2xl truncate'">
-                                                    {{ key.value }}
+                                            <td>
+                                                <div class="flex px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                    <div :class="key.is_hidden ? 'blur-sm max-w-md truncate' : 'max-w-md truncate'">
+                                                        {{ key.value }}
+                                                    </div>
+                                                    <div v-if="!key.is_hidden" class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="key.is_hidden = true">
+                                                        <show-icon></show-icon>
+                                                    </div>
+                                                    <div v-else class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="key.is_hidden = false">
+                                                        <hide-icon></hide-icon>
+                                                    </div>
+                                                    <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"/>
+                                                    <jet-action-message :on="currentClipboard == key.value" class="ml-2">
+                                                        Copied.
+                                                    </jet-action-message>
                                                 </div>
-                                                <div v-if="!key.is_hidden" class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="key.is_hidden = true">
-                                                    <show-icon></show-icon>
-                                                </div>
-                                                <div v-else class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="key.is_hidden = false">
-                                                    <hide-icon></hide-icon>
-                                                </div>
-                                                <clipboard-copy-icon class="cursor-pointer ml-4 text-indigo-600 hover:text-indigo-900" @click="copy(key.value)"/>
-                                                <jet-action-message :on="currentClipboard == key.value" class="ml-2">
-                                                    Copied.
-                                                </jet-action-message>
                                             </td>
-                                            <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                            <td class="px-6 py-4 text-sm text-gray-500 max-w-lg whitespace-nowrap">
                                                 {{ key.public ? "Yes" : "No" }}
                                             </td>
-                                            <td class="flex px-6 py-4 text-sm font-medium text-right place-content-end whitespace-nowrap">
-                                                <custom-nav-link v-if="$page.props.user.id == key.owner_id || hasAdminAccess" :href="key.edit_url" class="text-indigo-600 hover:text-indigo-900">
+                                            <td>
+                                                <custom-nav-link :href="key.edit_url" class="flex px-6 py-4 place-content-end text-indigo-600 hover:text-indigo-900">
                                                     <edit-icon />
                                                 </custom-nav-link>
                                             </td>
@@ -133,7 +137,7 @@
     import HideIcon from '@/HeroIcons/Hide.vue'
 
     export default defineComponent({
-        props: [ 'categories', 'categoryKeys', 'keys', 'searchQuery', 'hasAdminAccess' ],
+        props: [ 'categories', 'categoryKeys', 'keys', 'searchQuery' ],
 
         components: {
             CustomNavLink,
