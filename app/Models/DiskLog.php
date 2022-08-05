@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Laravel\Sanctum\Sanctum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,11 @@ class DiskLog extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function token()
+    {
+        return $this->belongsTo(Sanctum::$personalAccessTokenModel, 'personal_access_token_id');
     }
 
     public static function verifyType(String $type)
