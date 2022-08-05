@@ -14,7 +14,7 @@ class DiskLogController extends Controller
 {
     public function index()
     {
-        $logs = DiskLog::with(['disk', 'user'])->orderBy('created_at', 'desc')->paginate(25);
+        $logs = DiskLog::with(['disk', 'user', 'token'])->orderBy('created_at', 'desc')->paginate(25);
 
         $logs->getCollection()->transform(function($log) {
             return $this->logTransform($log);
@@ -28,7 +28,7 @@ class DiskLogController extends Controller
 
     public function disk(Disk $disk)
     {
-        $logs = DiskLog::with(['disk', 'user'])->where('disk_id', $disk->id)->orderBy('created_at', 'desc')->paginate(25);
+        $logs = DiskLog::with(['disk', 'user', 'token'])->where('disk_id', $disk->id)->orderBy('created_at', 'desc')->paginate(25);
 
         $logs->getCollection()->transform(function($log) {
             return $this->logTransform($log);
@@ -43,7 +43,7 @@ class DiskLogController extends Controller
 
     public function user(User $user)
     {
-        $logs = DiskLog::with(['disk', 'user'])->where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(25);
+        $logs = DiskLog::with(['disk', 'user', 'token'])->where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(25);
 
         $logs->getCollection()->transform(function($log) {
             return $this->logTransform($log);
@@ -168,7 +168,7 @@ class DiskLogController extends Controller
             'id' => $log->id,
             'file' => $log->file,
             'disk' => $log->disk->name,
-            'user' => $log->user->name,
+            'user' => $log->token ? $log->token->name . ' (' . $log->user->name . ')' : $log->user->name,
             'diskid' => $log->disk->id,
             'userid' => $log->user->id,
             'type' => $log->type,

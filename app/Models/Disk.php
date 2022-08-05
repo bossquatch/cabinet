@@ -249,6 +249,7 @@ class Disk extends Model
 
         $this->diskLogs()->create([
             'user_id' => request()->user()->id,
+            'personal_access_token_id' => request()->route()->getPrefix() == 'api' ? request()->user()->currentAccessToken()->id : null,
             'file' => $size ? ($filename . ' (' . $size . ')') : $filename,
             'type' => $type,
         ]);
