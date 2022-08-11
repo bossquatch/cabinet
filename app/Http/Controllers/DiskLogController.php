@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\DiskLog;
 use App\Models\Disk;
 use App\Models\User;
+use App\Models\PersonalAccessToken;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
@@ -72,6 +73,7 @@ class DiskLogController extends Controller
         $activity_type = $this->typesOfActivity($logs);
         $disk_activity = $this->diskActivity($logs);
         $user_activity = $this->userActivity($logs);
+        $token_activity = $this->tokenActivity($logs);
 
         return Inertia::render('Logs/Analytics', [
             'recent_activity' => $recent_activity,
@@ -79,6 +81,7 @@ class DiskLogController extends Controller
             'activity_type' => $activity_type,
             'disk_activity' => $disk_activity,
             'user_activity' => $user_activity,
+            'token_activity' => $token_activity,
         ]);
     }
 
@@ -155,6 +158,23 @@ class DiskLogController extends Controller
             $name = $users->where('id', $user_id)->first()->name;
             $return['labels'][] = $name;
             $return['data'][] = $user_logs->count();
+        }
+
+        return $return;
+    }
+
+    private function tokenActivity($logs)
+    {
+        $return = [];
+        $tokens = PersonalAccessToken::get();
+
+        $token_activity_raw = $logs->groupBy('personal_access_token_id');
+        foreach($token_activity_raw as $token_id => $token_logs) {
+            if ($token_id) {
+                $name = $tokens->where('id', $token_id)->first()->name;
+                $return['labels'][] = $name;
+                $return['data'][] = $token_logs->count();
+            }
         }
 
         return $return;
