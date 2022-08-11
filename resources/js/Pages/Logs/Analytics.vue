@@ -19,6 +19,7 @@
                         </div>
                         <BarChart ref="diskChart" :chartData="diskData" :options="diskOptions" class="p-2 max-h-56" />
                         <BarChart ref="userChart" :chartData="userData" :options="userOptions" class="p-2 max-h-56" />
+                        <BarChart ref="tokenChart" :chartData="tokenData" :options="tokenOptions" class="p-2 max-h-56" />
                     </div>
                 </div>
             </div>
@@ -41,7 +42,8 @@
             'dow_activity',
             'activity_type',
             'disk_activity',
-            'user_activity'
+            'user_activity',
+            'token_activity'
         ],
 
         components: {
@@ -219,6 +221,47 @@
                         }
                     }
                 }
+            },
+
+            tokenData() {
+                return {
+                    labels: this.token_activity.labels,
+                    datasets: [
+                        {
+                            backgroundColor: "rgb(99, 102, 241)",
+                            data: this.token_activity.data
+                        }
+                    ]
+                }
+            },
+            tokenOptions() {
+                return {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "API Activity"
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Token'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Amount of Activity'
+                            }
+                        }
+                    }
+                }
             }
         },
 
@@ -228,13 +271,15 @@
             const typeChart = ref();
             const diskChart = ref();
             const userChart = ref();
+            const tokenChart = ref();
 
             return { 
                 recentChart,
                 dowChart,
                 typeChart,
                 diskChart,
-                userChart 
+                userChart,
+                tokenChart 
             }
         }
     })
